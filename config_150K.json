@@ -1,0 +1,28 @@
+{
+  "img_size": [256, 256],
+  "batch_size": 64,
+  "seed": 42,
+  "epochs": 30,
+  "learning_rate": 0.001,
+  "reduce_lr_factor": 0.5,
+  "reduce_lr_patience": 3,
+  "early_stopping_patience": 5,
+  "dropout": {
+    "bloc1": 0.3,
+    "bloc2": 0.4,
+    "bloc3": 0.4,
+    "bloc4": 0.4,
+    "head": 0.6
+  },
+  "filters": [32, 64, 128, 256],
+  "dense_units": 128,
+  "l2": 0.001,
+  "shuffle_buffer": 500,
+  "augmentation": {
+    "flip": "horizontal",
+    "rotation": 0.05,
+    "zoom": 0.1,
+    "translation": 0.1
+  },
+  "class_names": ["Painting", "Photo", "Schematics", "Sketch", "Text"]
+}

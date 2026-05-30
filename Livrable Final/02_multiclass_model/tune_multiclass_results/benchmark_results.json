@@ -1,0 +1,1114 @@
+[
+  {
+    "test_acc": 0.9195,
+    "test_loss": 0.2309,
+    "recall_macro": 0.9309,
+    "precision_macro": 0.9299,
+    "f1_macro": 0.9303,
+    "recall_per_class": {
+      "Painting": 0.8807,
+      "Photo": 0.872,
+      "Schematics": 0.9313,
+      "Sketch": 0.9858,
+      "Text": 0.9847
+    },
+    "precision_per_class": {
+      "Painting": 0.8595,
+      "Photo": 0.8714,
+      "Schematics": 0.9433,
+      "Sketch": 0.9766,
+      "Text": 0.9986
+    },
+    "f1_per_class": {
+      "Painting": 0.8699,
+      "Photo": 0.8717,
+      "Schematics": 0.9373,
+      "Sketch": 0.9812,
+      "Text": 0.9916
+    },
+    "trial_id": 0,
+    "n_params": 470437,
+    "n_params_deploy": 470437,
+    "n_params_train": 470447,
+    "meets_target": true,
+    "config": {
+      "img_size": [
+        224,
+        224
+      ],
+      "batch_size": 64,
+      "seed": 42,
+      "epochs": 30,
+      "learning_rate": 0.001,
+      "reduce_lr_factor": 0.5,
+      "reduce_lr_patience": 2,
+      "early_stopping_patience": 5,
+      "dropout": {
+        "bloc1": 0.2,
+        "bloc2": 0.2,
+        "bloc3": 0.25,
+        "bloc4": 0.25,
+        "head": 0.6
+      },
+      "filters": [
+        32,
+        64,
+        128,
+        256
+      ],
+      "dense_units": 128,
+      "l2": 0.001,
+      "shuffle_buffer": 1000,
+      "augmentation": {
+        "flip": "horizontal",
+        "rotation": 0.08,
+        "zoom": 0.05,
+        "translation": 0.1
+      },
+      "class_names": [
+        "Painting",
+        "Photo",
+        "Schematics",
+        "Sketch",
+        "Text"
+      ]
+    }
+  },
+  {
+    "test_acc": 0.9174,
+    "test_loss": 0.2508,
+    "recall_macro": 0.93,
+    "precision_macro": 0.9137,
+    "f1_macro": 0.921,
+    "recall_per_class": {
+      "Painting": 0.8733,
+      "Photo": 0.8813,
+      "Schematics": 0.9053,
+      "Sketch": 0.9906,
+      "Text": 0.9993
+    },
+    "precision_per_class": {
+      "Painting": 0.8568,
+      "Photo": 0.8686,
+      "Schematics": 0.9721,
+      "Sketch": 0.8898,
+      "Text": 0.981
+    },
+    "f1_per_class": {
+      "Painting": 0.865,
+      "Photo": 0.8749,
+      "Schematics": 0.9375,
+      "Sketch": 0.9375,
+      "Text": 0.9901
+    },
+    "trial_id": 1,
+    "n_params": 470437,
+    "n_params_deploy": 470437,
+    "n_params_train": 470447,
+    "meets_target": true,
+    "config": {
+      "img_size": [
+        224,
+        224
+      ],
+      "batch_size": 32,
+      "seed": 42,
+      "epochs": 30,
+      "learning_rate": 0.0005,
+      "reduce_lr_factor": 0.5,
+      "reduce_lr_patience": 3,
+      "early_stopping_patience": 10,
+      "dropout": {
+        "bloc1": 0.3,
+        "bloc2": 0.3,
+        "bloc3": 0.35,
+        "bloc4": 0.35,
+        "head": 0.6
+      },
+      "filters": [
+        32,
+        64,
+        128,
+        256
+      ],
+      "dense_units": 128,
+      "l2": 0.0005,
+      "shuffle_buffer": 1000,
+      "augmentation": {
+        "flip": "horizontal",
+        "rotation": 0.05,
+        "zoom": 0.15,
+        "translation": 0.1
+      },
+      "class_names": [
+        "Painting",
+        "Photo",
+        "Schematics",
+        "Sketch",
+        "Text"
+      ]
+    }
+  },
+  {
+    "test_acc": 0.9192,
+    "test_loss": 0.2343,
+    "recall_macro": 0.9266,
+    "precision_macro": 0.927,
+    "f1_macro": 0.9263,
+    "recall_per_class": {
+      "Painting": 0.9107,
+      "Photo": 0.858,
+      "Schematics": 0.934,
+      "Sketch": 0.9623,
+      "Text": 0.968
+    },
+    "precision_per_class": {
+      "Painting": 0.8339,
+      "Photo": 0.9102,
+      "Schematics": 0.9384,
+      "Sketch": 0.9533,
+      "Text": 0.9993
+    },
+    "f1_per_class": {
+      "Painting": 0.8706,
+      "Photo": 0.8833,
+      "Schematics": 0.9362,
+      "Sketch": 0.9577,
+      "Text": 0.9834
+    },
+    "trial_id": 2,
+    "n_params": 40277,
+    "n_params_deploy": 40277,
+    "n_params_train": 40285,
+    "meets_target": true,
+    "config": {
+      "img_size": [
+        224,
+        224
+      ],
+      "batch_size": 32,
+      "seed": 42,
+      "epochs": 30,
+      "learning_rate": 0.001,
+      "reduce_lr_factor": 0.5,
+      "reduce_lr_patience": 2,
+      "early_stopping_patience": 10,
+      "dropout": {
+        "bloc1": 0.15000000000000002,
+        "bloc2": 0.15000000000000002,
+        "bloc3": 0.2,
+        "bloc4": 0.2,
+        "head": 0.55
+      },
+      "filters": [
+        16,
+        32,
+        64
+      ],
+      "dense_units": 64,
+      "l2": 0.0005,
+      "shuffle_buffer": 500,
+      "augmentation": {
+        "flip": "horizontal",
+        "rotation": 0.08,
+        "zoom": 0.05,
+        "translation": 0.1
+      },
+      "class_names": [
+        "Painting",
+        "Photo",
+        "Schematics",
+        "Sketch",
+        "Text"
+      ]
+    }
+  },
+  {
+    "test_acc": 0.9258,
+    "test_loss": 0.2194,
+    "recall_macro": 0.9329,
+    "precision_macro": 0.9289,
+    "f1_macro": 0.9306,
+    "recall_per_class": {
+      "Painting": 0.8853,
+      "Photo": 0.912,
+      "Schematics": 0.9153,
+      "Sketch": 0.967,
+      "Text": 0.9847
+    },
+    "precision_per_class": {
+      "Painting": 0.8714,
+      "Photo": 0.8708,
+      "Schematics": 0.9669,
+      "Sketch": 0.9361,
+      "Text": 0.9993
+    },
+    "f1_per_class": {
+      "Painting": 0.8783,
+      "Photo": 0.8909,
+      "Schematics": 0.9404,
+      "Sketch": 0.9513,
+      "Text": 0.9919
+    },
+    "trial_id": 3,
+    "n_params": 175013,
+    "n_params_deploy": 175013,
+    "n_params_train": 175021,
+    "meets_target": true,
+    "config": {
+      "img_size": [
+        224,
+        224
+      ],
+      "batch_size": 64,
+      "seed": 42,
+      "epochs": 30,
+      "learning_rate": 0.001,
+      "reduce_lr_factor": 0.5,
+      "reduce_lr_patience": 4,
+      "early_stopping_patience": 7,
+      "dropout": {
+        "bloc1": 0.1,
+        "bloc2": 0.1,
+        "bloc3": 0.15,
+        "bloc4": 0.15,
+        "head": 0.3
+      },
+      "filters": [
+        32,
+        64,
+        128
+      ],
+      "dense_units": 256,
+      "l2": 0.0005,
+      "shuffle_buffer": 500,
+      "augmentation": {
+        "flip": "horizontal",
+        "rotation": 0.03,
+        "zoom": 0.15,
+        "translation": 0.1
+      },
+      "class_names": [
+        "Painting",
+        "Photo",
+        "Schematics",
+        "Sketch",
+        "Text"
+      ]
+    }
+  },
+  {
+    "test_acc": 0.8867,
+    "test_loss": 0.3304,
+    "recall_macro": 0.8867,
+    "precision_macro": 0.906,
+    "f1_macro": 0.8908,
+    "recall_per_class": {
+      "Painting": 0.9413,
+      "Photo": 0.7127,
+      "Schematics": 0.8947,
+      "Sketch": 0.8868,
+      "Text": 0.998
+    },
+    "precision_per_class": {
+      "Painting": 0.7256,
+      "Photo": 0.9006,
+      "Schematics": 0.9832,
+      "Sketch": 0.9307,
+      "Text": 0.9901
+    },
+    "f1_per_class": {
+      "Painting": 0.8195,
+      "Photo": 0.7957,
+      "Schematics": 0.9368,
+      "Sketch": 0.9082,
+      "Text": 0.994
+    },
+    "trial_id": 4,
+    "n_params": 270277,
+    "n_params_deploy": 270277,
+    "n_params_train": 270283,
+    "meets_target": false,
+    "config": {
+      "img_size": [
+        224,
+        224
+      ],
+      "batch_size": 64,
+      "seed": 42,
+      "epochs": 30,
+      "learning_rate": 0.0002,
+      "reduce_lr_factor": 0.5,
+      "reduce_lr_patience": 2,
+      "early_stopping_patience": 9,
+      "dropout": {
+        "bloc1": 0.2,
+        "bloc2": 0.2,
+        "bloc3": 0.25,
+        "bloc4": 0.25,
+        "head": 0.3
+      },
+      "filters": [
+        64,
+        128
+      ],
+      "dense_units": 64,
+      "l2": 0.0005,
+      "shuffle_buffer": 500,
+      "augmentation": {
+        "flip": "horizontal",
+        "rotation": 0.08,
+        "zoom": 0.05,
+        "translation": 0.1
+      },
+      "class_names": [
+        "Painting",
+        "Photo",
+        "Schematics",
+        "Sketch",
+        "Text"
+      ]
+    }
+  },
+  {
+    "test_acc": 0.8609,
+    "test_loss": 0.3899,
+    "recall_macro": 0.8848,
+    "precision_macro": 0.8658,
+    "f1_macro": 0.8623,
+    "recall_per_class": {
+      "Painting": 0.954,
+      "Photo": 0.6473,
+      "Schematics": 0.824,
+      "Sketch": 1.0,
+      "Text": 0.9987
+    },
+    "precision_per_class": {
+      "Painting": 0.688,
+      "Photo": 0.9024,
+      "Schematics": 0.9904,
+      "Sketch": 0.7709,
+      "Text": 0.9772
+    },
+    "f1_per_class": {
+      "Painting": 0.7994,
+      "Photo": 0.7539,
+      "Schematics": 0.8996,
+      "Sketch": 0.8706,
+      "Text": 0.9878
+    },
+    "trial_id": 5,
+    "n_params": 70821,
+    "n_params_deploy": 70821,
+    "n_params_train": 70827,
+    "meets_target": false,
+    "config": {
+      "img_size": [
+        224,
+        224
+      ],
+      "batch_size": 32,
+      "seed": 42,
+      "epochs": 30,
+      "learning_rate": 0.0005,
+      "reduce_lr_factor": 0.5,
+      "reduce_lr_patience": 4,
+      "early_stopping_patience": 7,
+      "dropout": {
+        "bloc1": 0.4,
+        "bloc2": 0.4,
+        "bloc3": 0.45,
+        "bloc4": 0.45,
+        "head": 0.45
+      },
+      "filters": [
+        32,
+        64
+      ],
+      "dense_units": 64,
+      "l2": 0.0005,
+      "shuffle_buffer": 500,
+      "augmentation": {
+        "flip": "horizontal",
+        "rotation": 0.05,
+        "zoom": 0.1,
+        "translation": 0.1
+      },
+      "class_names": [
+        "Painting",
+        "Photo",
+        "Schematics",
+        "Sketch",
+        "Text"
+      ]
+    }
+  },
+  {
+    "test_acc": 0.8746,
+    "test_loss": 0.4519,
+    "recall_macro": 0.8961,
+    "precision_macro": 0.8838,
+    "f1_macro": 0.8786,
+    "recall_per_class": {
+      "Painting": 0.9593,
+      "Photo": 0.6567,
+      "Schematics": 0.866,
+      "Sketch": 1.0,
+      "Text": 0.9987
+    },
+    "precision_per_class": {
+      "Painting": 0.7117,
+      "Photo": 0.9535,
+      "Schematics": 0.9629,
+      "Sketch": 0.8249,
+      "Text": 0.9658
+    },
+    "f1_per_class": {
+      "Painting": 0.8171,
+      "Photo": 0.7777,
+      "Schematics": 0.9119,
+      "Sketch": 0.9041,
+      "Text": 0.982
+    },
+    "trial_id": 6,
+    "n_params": 1872709,
+    "n_params_deploy": 1872709,
+    "n_params_train": 1872719,
+    "meets_target": false,
+    "config": {
+      "img_size": [
+        224,
+        224
+      ],
+      "batch_size": 64,
+      "seed": 42,
+      "epochs": 30,
+      "learning_rate": 0.0002,
+      "reduce_lr_factor": 0.5,
+      "reduce_lr_patience": 2,
+      "early_stopping_patience": 5,
+      "dropout": {
+        "bloc1": 0.35,
+        "bloc2": 0.35,
+        "bloc3": 0.4,
+        "bloc4": 0.4,
+        "head": 0.35
+      },
+      "filters": [
+        64,
+        128,
+        256,
+        512
+      ],
+      "dense_units": 256,
+      "l2": 0.0005,
+      "shuffle_buffer": 1000,
+      "augmentation": {
+        "flip": "horizontal",
+        "rotation": 0.03,
+        "zoom": 0.15,
+        "translation": 0.1
+      },
+      "class_names": [
+        "Painting",
+        "Photo",
+        "Schematics",
+        "Sketch",
+        "Text"
+      ]
+    }
+  },
+  {
+    "test_acc": 0.9496,
+    "test_loss": 0.1566,
+    "recall_macro": 0.955,
+    "precision_macro": 0.9586,
+    "f1_macro": 0.9565,
+    "recall_per_class": {
+      "Painting": 0.9427,
+      "Photo": 0.9013,
+      "Schematics": 0.952,
+      "Sketch": 0.9811,
+      "Text": 0.998
+    },
+    "precision_per_class": {
+      "Painting": 0.8794,
+      "Photo": 0.9382,
+      "Schematics": 0.9855,
+      "Sketch": 0.9952,
+      "Text": 0.9947
+    },
+    "f1_per_class": {
+      "Painting": 0.9099,
+      "Photo": 0.9194,
+      "Schematics": 0.9685,
+      "Sketch": 0.9881,
+      "Text": 0.9963
+    },
+    "trial_id": 7,
+    "n_params": 470437,
+    "n_params_deploy": 470437,
+    "n_params_train": 470447,
+    "meets_target": true,
+    "config": {
+      "img_size": [
+        224,
+        224
+      ],
+      "batch_size": 64,
+      "seed": 42,
+      "epochs": 30,
+      "learning_rate": 0.001,
+      "reduce_lr_factor": 0.5,
+      "reduce_lr_patience": 4,
+      "early_stopping_patience": 6,
+      "dropout": {
+        "bloc1": 0.15000000000000002,
+        "bloc2": 0.15000000000000002,
+        "bloc3": 0.2,
+        "bloc4": 0.2,
+        "head": 0.35
+      },
+      "filters": [
+        32,
+        64,
+        128,
+        256
+      ],
+      "dense_units": 128,
+      "l2": 0.0005,
+      "shuffle_buffer": 300,
+      "augmentation": {
+        "flip": "horizontal",
+        "rotation": 0.03,
+        "zoom": 0.05,
+        "translation": 0.1
+      },
+      "class_names": [
+        "Painting",
+        "Photo",
+        "Schematics",
+        "Sketch",
+        "Text"
+      ]
+    }
+  },
+  {
+    "test_acc": 0.9087,
+    "test_loss": 0.275,
+    "recall_macro": 0.9236,
+    "precision_macro": 0.9125,
+    "f1_macro": 0.9154,
+    "recall_per_class": {
+      "Painting": 0.9293,
+      "Photo": 0.7947,
+      "Schematics": 0.902,
+      "Sketch": 0.9953,
+      "Text": 0.9967
+    },
+    "precision_per_class": {
+      "Painting": 0.7902,
+      "Photo": 0.9127,
+      "Schematics": 0.9678,
+      "Sketch": 0.9017,
+      "Text": 0.9901
+    },
+    "f1_per_class": {
+      "Painting": 0.8542,
+      "Photo": 0.8496,
+      "Schematics": 0.9337,
+      "Sketch": 0.9462,
+      "Text": 0.9934
+    },
+    "trial_id": 8,
+    "n_params": 75301,
+    "n_params_deploy": 75301,
+    "n_params_train": 75307,
+    "meets_target": false,
+    "config": {
+      "img_size": [
+        224,
+        224
+      ],
+      "batch_size": 64,
+      "seed": 42,
+      "epochs": 30,
+      "learning_rate": 0.0005,
+      "reduce_lr_factor": 0.5,
+      "reduce_lr_patience": 4,
+      "early_stopping_patience": 5,
+      "dropout": {
+        "bloc1": 0.25,
+        "bloc2": 0.25,
+        "bloc3": 0.3,
+        "bloc4": 0.3,
+        "head": 0.4
+      },
+      "filters": [
+        32,
+        64
+      ],
+      "dense_units": 128,
+      "l2": 0.001,
+      "shuffle_buffer": 300,
+      "augmentation": {
+        "flip": "horizontal",
+        "rotation": 0.08,
+        "zoom": 0.05,
+        "translation": 0.1
+      },
+      "class_names": [
+        "Painting",
+        "Photo",
+        "Schematics",
+        "Sketch",
+        "Text"
+      ]
+    }
+  },
+  {
+    "test_acc": 0.8503,
+    "test_loss": 0.4034,
+    "recall_macro": 0.8258,
+    "precision_macro": 0.888,
+    "f1_macro": 0.8451,
+    "recall_per_class": {
+      "Painting": 0.89,
+      "Photo": 0.6453,
+      "Schematics": 0.9007,
+      "Sketch": 0.7075,
+      "Text": 0.9853
+    },
+    "precision_per_class": {
+      "Painting": 0.6921,
+      "Photo": 0.9098,
+      "Schematics": 0.8761,
+      "Sketch": 0.9934,
+      "Text": 0.9685
+    },
+    "f1_per_class": {
+      "Painting": 0.7787,
+      "Photo": 0.7551,
+      "Schematics": 0.8882,
+      "Sketch": 0.8264,
+      "Text": 0.9769
+    },
+    "trial_id": 9,
+    "n_params": 144469,
+    "n_params_deploy": 144469,
+    "n_params_train": 144479,
+    "meets_target": false,
+    "config": {
+      "img_size": [
+        224,
+        224
+      ],
+      "batch_size": 64,
+      "seed": 42,
+      "epochs": 30,
+      "learning_rate": 0.001,
+      "reduce_lr_factor": 0.5,
+      "reduce_lr_patience": 2,
+      "early_stopping_patience": 8,
+      "dropout": {
+        "bloc1": 0.30000000000000004,
+        "bloc2": 0.30000000000000004,
+        "bloc3": 0.35,
+        "bloc4": 0.35,
+        "head": 0.3
+      },
+      "filters": [
+        16,
+        32,
+        64,
+        128
+      ],
+      "dense_units": 256,
+      "l2": 0.001,
+      "shuffle_buffer": 1000,
+      "augmentation": {
+        "flip": "horizontal",
+        "rotation": 0.05,
+        "zoom": 0.05,
+        "translation": 0.1
+      },
+      "class_names": [
+        "Painting",
+        "Photo",
+        "Schematics",
+        "Sketch",
+        "Text"
+      ]
+    }
+  },
+  {
+    "test_acc": 0.9202,
+    "test_loss": 0.2226,
+    "recall_macro": 0.9331,
+    "precision_macro": 0.9318,
+    "f1_macro": 0.9315,
+    "recall_per_class": {
+      "Painting": 0.9127,
+      "Photo": 0.838,
+      "Schematics": 0.9207,
+      "Sketch": 0.9953,
+      "Text": 0.9987
+    },
+    "precision_per_class": {
+      "Painting": 0.8193,
+      "Photo": 0.8921,
+      "Schematics": 0.985,
+      "Sketch": 0.9724,
+      "Text": 0.9901
+    },
+    "f1_per_class": {
+      "Painting": 0.8635,
+      "Photo": 0.8642,
+      "Schematics": 0.9518,
+      "Sketch": 0.9837,
+      "Text": 0.9944
+    },
+    "trial_id": 10,
+    "n_params": 40277,
+    "n_params_deploy": 40277,
+    "n_params_train": 40285,
+    "meets_target": true,
+    "config": {
+      "img_size": [
+        224,
+        224
+      ],
+      "batch_size": 32,
+      "seed": 42,
+      "epochs": 30,
+      "learning_rate": 0.001,
+      "reduce_lr_factor": 0.5,
+      "reduce_lr_patience": 3,
+      "early_stopping_patience": 10,
+      "dropout": {
+        "bloc1": 0.1,
+        "bloc2": 0.1,
+        "bloc3": 0.15,
+        "bloc4": 0.15,
+        "head": 0.5
+      },
+      "filters": [
+        16,
+        32,
+        64
+      ],
+      "dense_units": 64,
+      "l2": 0.0001,
+      "shuffle_buffer": 500,
+      "augmentation": {
+        "flip": "horizontal",
+        "rotation": 0.08,
+        "zoom": 0.1,
+        "translation": 0.1
+      },
+      "class_names": [
+        "Painting",
+        "Photo",
+        "Schematics",
+        "Sketch",
+        "Text"
+      ]
+    }
+  },
+  {
+    "test_acc": 0.9332,
+    "test_loss": 0.1944,
+    "recall_macro": 0.9333,
+    "precision_macro": 0.9417,
+    "f1_macro": 0.9368,
+    "recall_per_class": {
+      "Painting": 0.9293,
+      "Photo": 0.8747,
+      "Schematics": 0.93,
+      "Sketch": 0.934,
+      "Text": 0.9987
+    },
+    "precision_per_class": {
+      "Painting": 0.8469,
+      "Photo": 0.913,
+      "Schematics": 0.9831,
+      "Sketch": 0.9706,
+      "Text": 0.9947
+    },
+    "f1_per_class": {
+      "Painting": 0.8862,
+      "Photo": 0.8934,
+      "Schematics": 0.9558,
+      "Sketch": 0.9519,
+      "Text": 0.9967
+    },
+    "trial_id": 11,
+    "n_params": 40277,
+    "n_params_deploy": 40277,
+    "n_params_train": 40285,
+    "meets_target": true,
+    "config": {
+      "img_size": [
+        224,
+        224
+      ],
+      "batch_size": 32,
+      "seed": 42,
+      "epochs": 30,
+      "learning_rate": 0.001,
+      "reduce_lr_factor": 0.5,
+      "reduce_lr_patience": 3,
+      "early_stopping_patience": 10,
+      "dropout": {
+        "bloc1": 0.1,
+        "bloc2": 0.1,
+        "bloc3": 0.15,
+        "bloc4": 0.15,
+        "head": 0.5
+      },
+      "filters": [
+        16,
+        32,
+        64
+      ],
+      "dense_units": 64,
+      "l2": 0.0001,
+      "shuffle_buffer": 500,
+      "augmentation": {
+        "flip": "horizontal",
+        "rotation": 0.08,
+        "zoom": 0.1,
+        "translation": 0.1
+      },
+      "class_names": [
+        "Painting",
+        "Photo",
+        "Schematics",
+        "Sketch",
+        "Text"
+      ]
+    }
+  },
+  {
+    "test_acc": 0.9189,
+    "test_loss": 0.2297,
+    "recall_macro": 0.9231,
+    "precision_macro": 0.9247,
+    "f1_macro": 0.9235,
+    "recall_per_class": {
+      "Painting": 0.898,
+      "Photo": 0.8573,
+      "Schematics": 0.918,
+      "Sketch": 0.9434,
+      "Text": 0.9987
+    },
+    "precision_per_class": {
+      "Painting": 0.8335,
+      "Photo": 0.8814,
+      "Schematics": 0.9731,
+      "Sketch": 0.9434,
+      "Text": 0.9921
+    },
+    "f1_per_class": {
+      "Painting": 0.8646,
+      "Photo": 0.8692,
+      "Schematics": 0.9448,
+      "Sketch": 0.9434,
+      "Text": 0.9953
+    },
+    "trial_id": 12,
+    "n_params": 40277,
+    "n_params_deploy": 40277,
+    "n_params_train": 40285,
+    "meets_target": true,
+    "config": {
+      "img_size": [
+        224,
+        224
+      ],
+      "batch_size": 32,
+      "seed": 42,
+      "epochs": 30,
+      "learning_rate": 0.001,
+      "reduce_lr_factor": 0.5,
+      "reduce_lr_patience": 3,
+      "early_stopping_patience": 9,
+      "dropout": {
+        "bloc1": 0.15000000000000002,
+        "bloc2": 0.15000000000000002,
+        "bloc3": 0.2,
+        "bloc4": 0.2,
+        "head": 0.5
+      },
+      "filters": [
+        16,
+        32,
+        64
+      ],
+      "dense_units": 64,
+      "l2": 0.0001,
+      "shuffle_buffer": 500,
+      "augmentation": {
+        "flip": "horizontal",
+        "rotation": 0.08,
+        "zoom": 0.1,
+        "translation": 0.1
+      },
+      "class_names": [
+        "Painting",
+        "Photo",
+        "Schematics",
+        "Sketch",
+        "Text"
+      ]
+    }
+  },
+  {
+    "test_acc": 0.9329,
+    "test_loss": 0.2055,
+    "recall_macro": 0.942,
+    "precision_macro": 0.9355,
+    "f1_macro": 0.9386,
+    "recall_per_class": {
+      "Painting": 0.896,
+      "Photo": 0.894,
+      "Schematics": 0.938,
+      "Sketch": 0.9858,
+      "Text": 0.996
+    },
+    "precision_per_class": {
+      "Painting": 0.8744,
+      "Photo": 0.8952,
+      "Schematics": 0.9677,
+      "Sketch": 0.9457,
+      "Text": 0.9947
+    },
+    "f1_per_class": {
+      "Painting": 0.8851,
+      "Photo": 0.8946,
+      "Schematics": 0.9526,
+      "Sketch": 0.9654,
+      "Text": 0.9953
+    },
+    "trial_id": 13,
+    "n_params": 40277,
+    "n_params_deploy": 40277,
+    "n_params_train": 40285,
+    "meets_target": true,
+    "config": {
+      "img_size": [
+        224,
+        224
+      ],
+      "batch_size": 32,
+      "seed": 42,
+      "epochs": 30,
+      "learning_rate": 0.001,
+      "reduce_lr_factor": 0.5,
+      "reduce_lr_patience": 3,
+      "early_stopping_patience": 9,
+      "dropout": {
+        "bloc1": 0.1,
+        "bloc2": 0.1,
+        "bloc3": 0.15,
+        "bloc4": 0.15,
+        "head": 0.55
+      },
+      "filters": [
+        16,
+        32,
+        64
+      ],
+      "dense_units": 64,
+      "l2": 0.0001,
+      "shuffle_buffer": 500,
+      "augmentation": {
+        "flip": "horizontal",
+        "rotation": 0.08,
+        "zoom": 0.1,
+        "translation": 0.1
+      },
+      "class_names": [
+        "Painting",
+        "Photo",
+        "Schematics",
+        "Sketch",
+        "Text"
+      ]
+    }
+  },
+  {
+    "test_acc": 0.9213,
+    "test_loss": 0.2226,
+    "recall_macro": 0.9259,
+    "precision_macro": 0.9252,
+    "f1_macro": 0.9244,
+    "recall_per_class": {
+      "Painting": 0.9287,
+      "Photo": 0.838,
+      "Schematics": 0.916,
+      "Sketch": 0.9481,
+      "Text": 0.9987
+    },
+    "precision_per_class": {
+      "Painting": 0.8209,
+      "Photo": 0.9102,
+      "Schematics": 0.9765,
+      "Sketch": 0.9263,
+      "Text": 0.9921
+    },
+    "f1_per_class": {
+      "Painting": 0.8714,
+      "Photo": 0.8726,
+      "Schematics": 0.9453,
+      "Sketch": 0.9371,
+      "Text": 0.9953
+    },
+    "trial_id": 14,
+    "n_params": 40277,
+    "n_params_deploy": 40277,
+    "n_params_train": 40285,
+    "meets_target": true,
+    "config": {
+      "img_size": [
+        224,
+        224
+      ],
+      "batch_size": 32,
+      "seed": 42,
+      "epochs": 30,
+      "learning_rate": 0.001,
+      "reduce_lr_factor": 0.5,
+      "reduce_lr_patience": 2,
+      "early_stopping_patience": 10,
+      "dropout": {
+        "bloc1": 0.15000000000000002,
+        "bloc2": 0.15000000000000002,
+        "bloc3": 0.2,
+        "bloc4": 0.2,
+        "head": 0.5
+      },
+      "filters": [
+        16,
+        32,
+        64
+      ],
+      "dense_units": 64,
+      "l2": 0.0001,
+      "shuffle_buffer": 500,
+      "augmentation": {
+        "flip": "horizontal",
+        "rotation": 0.08,
+        "zoom": 0.1,
+        "translation": 0.1
+      },
+      "class_names": [
+        "Painting",
+        "Photo",
+        "Schematics",
+        "Sketch",
+        "Text"
+      ]
+    }
+  }
+]

@@ -1,0 +1,14 @@
+{
+  "multiclass_model": "models/multiclass_023_best.keras",
+  "binary_model": "models/binary_photo_painting_best.keras",
+  "binary_backbone": "MobileNetV2",
+
+  "class_names": ["Painting", "Photo", "Schematics", "Sketch", "Text"],
+  "binary_classes": ["Painting", "Photo"],
+
+  "img_size": [224, 224],
+  "batch_size": 32,
+
+  "multiclass_history": "histories/multiclass_023_history.json",
+  "binary_history": "histories/binary_photo_painting_history.json"
+}

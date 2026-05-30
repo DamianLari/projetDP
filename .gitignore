@@ -1,0 +1,46 @@
+# Datasets bruts et splits (volumineux)
+  **/Dataset/
+  **/data_split/
+
+  tune_binary_results_1/
+  tune_binary_results_2/
+  tune_multiclass_results_1/
+  tune_multiclass_results_2/
+  
+  # Modèles entraînés
+  *.keras
+  *.h5
+  *.tflite
+  *.pb
+  
+  # Histoires d'entraînement
+  **/histories/
+
+  # Caches de datasets tf.data
+  **/ds_cache/
+  *_cache/
+  
+  # Python
+  __pycache__/
+  *.pyc
+  *.pyo
+  *.egg-info/
+  .venv/
+  venv/
+  env/
+
+  # Notebooks
+  .ipynb_checkpoints/
+
+  # Claude Code
+  .claude/
+
+  # OS
+  .DS_Store
+  Thumbs.db
+
+  # IDE
+  .vscode/
+  .idea/
+  *.swp
+  *.swo

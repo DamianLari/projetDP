@@ -1,0 +1,30 @@
+{
+  "img_size": [224, 224],
+  "batch_size": 32,
+  "seed": 42,
+  "backbone": "MobileNetV2",
+
+  "epochs_head": 10,
+  "lr_head": 0.001,
+
+  "epochs_finetune": 40,
+  "lr_finetune": 0.0005,
+  "unfreeze_fraction": 0.3,
+
+  "reduce_lr_factor": 0.5,
+  "reduce_lr_patience": 4,
+  "early_stopping_patience": 8,
+
+  "dense_units": 128,
+  "dropout_head": 0.4,
+  "shuffle_buffer": 1000,
+
+  "augmentation": {
+    "brightness": 0.1,
+    "contrast": 0.1,
+    "saturation": 0.1,
+    "zoom": 0.1
+  },
+
+  "class_names": ["Painting", "Photo"]
+}
