@@ -1,0 +1,4 @@
+{
+  "multiclass_model": "02_multiclass_model/tune_multiclass_results/multiclass_best_acc.keras",
+  "binary_model": "03_binary_model/tune_binary_results/binary_best.keras"
+}

@@ -30,7 +30,9 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 
 from binary_model import BINARY_CLASSES, make_dataset, run_training
-from utils import HISTORIES_DIR, MODELS_DIR, set_seeds
+from utils import HISTORIES_DIR, set_seeds
+
+MODELS_DIR = MODEL_DIR / "models"
 
 CFG_PATH = MODEL_DIR / "config_binary.json"
 FIGURES_DIR = Path("figures")

@@ -28,7 +28,9 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 
 from multiclass_model import make_dataset, run_training
-from utils import CLASS_NAMES, HISTORIES_DIR, MODELS_DIR, SPLIT_DIR, set_seeds
+from utils import CLASS_NAMES, HISTORIES_DIR, SPLIT_DIR, set_seeds
+
+MODELS_DIR = MODEL_DIR / "models"
 
 CFG_PATH = MODEL_DIR / "config_multiclass.json"
 FIGURES_DIR = Path("figures")
