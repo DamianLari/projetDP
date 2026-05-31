@@ -74,7 +74,7 @@ def main() -> None:
     model, history = run_training(cfg, train_ds, val_ds,
                                   model_path=model_path, verbose=1)
 
-    # save_history attend un objet History ; on a un dict → sauvegarde directe
+    # save_history attend un objet History ; on a un dict -> sauvegarde directe
     with open(history_path, "w", encoding="utf-8") as f:
         json.dump({k: [float(x) for x in v] for k, v in history.items()}, f, indent=2)
     print(f"\nHistory : {history_path}")

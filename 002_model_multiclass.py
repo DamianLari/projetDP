@@ -7,7 +7,7 @@ adapté au projet TouNum.
 Caractéristiques de ce style :
 - Sequential simple
 - image_dataset_from_directory avec validation_split (lit directement depuis Dataset/)
-- 3 blocs Conv-MaxPool (16 → 32 → 64 filtres) puis Flatten + Dense(128) + Dense(5)
+- 3 blocs Conv-MaxPool (16 -> 32 -> 64 filtres) puis Flatten + Dense(128) + Dense(5)
 - SparseCategoricalCrossentropy avec from_logits=True (pas de softmax explicite)
 - Data augmentation + Dropout pour régularisation
 

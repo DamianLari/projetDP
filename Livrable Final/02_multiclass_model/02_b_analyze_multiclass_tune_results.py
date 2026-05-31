@@ -158,7 +158,7 @@ def plot_bar_metrics(df: pd.DataFrame, save_path: Path) -> None:
     colors_ok   = ["#2ecc71" if m else "#e74c3c" for m in df["meets_target"]]
 
     fig, axes = plt.subplots(1, 3, figsize=(max(14, n * 0.9), 5))
-    fig.suptitle("Benchmark of tuned models — test set", fontsize=14, fontweight="bold")
+    fig.suptitle("Benchmark of tuned models : test set", fontsize=14, fontweight="bold")
 
     # Accuracy
     ax = axes[0]
@@ -241,7 +241,7 @@ def plot_accuracy_vs_params(df: pd.DataFrame, save_path: Path) -> None:
     fig, axes = plt.subplots(1, 2, figsize=(16, 6))
     fig.suptitle(
         "Accuracy vs number of parameters\n"
-        "Left: deployed model (trainable+non-trainable) — "
+        "Left: deployed model (trainable+non-trainable) : "
         "Right: training (+ Adam optimizer state)\n"
         "Top-left = lightweight AND performing  |  ⭕ = best ratio",
         fontsize=11, fontweight="bold"
@@ -300,7 +300,7 @@ def plot_cm(y_true, y_pred, trial_label: str, save_dir: Path, normalize: bool = 
     sns.heatmap(cm, annot=True, fmt=fmt, cmap="Blues",
                 xticklabels=CLASS_NAMES, yticklabels=CLASS_NAMES)
     plt.xlabel("Predicted"); plt.ylabel("Actual")
-    plt.title(f"Confusion Matrix — {trial_label} ({'normalized' if normalize else 'raw'})")
+    plt.title(f"Confusion Matrix : {trial_label} ({'normalized' if normalize else 'raw'})")
     plt.tight_layout()
     out = save_dir / f"cm_{trial_label}_{suffix}.png"
     plt.savefig(out, dpi=110); plt.close()
@@ -311,7 +311,7 @@ def plot_training_curves(history: dict, trial_label: str, save_path: Path,
     epochs = range(1, len(history["loss"]) + 1)
     color = "green" if meets_target else "red"
     fig, axes = plt.subplots(1, 2, figsize=(12, 4))
-    fig.suptitle(f"Training curves — {trial_label}", fontsize=12,
+    fig.suptitle(f"Training curves : {trial_label}", fontsize=12,
                  fontweight="bold", color=color)
 
     axes[0].plot(epochs, history["loss"], label="train loss")
@@ -400,7 +400,7 @@ def main() -> None:
         model_path = RESULTS_DIR / f"model_trial_{trial_id + 1:02d}.keras"
 
         print(f"\n{'─'*60}")
-        print(f"Trial {trial_id + 1:02d}  —  {model_path.name}")
+        print(f"Trial {trial_id + 1:02d}  :  {model_path.name}")
         print(f"{'─'*60}")
 
         if not model_path.exists():

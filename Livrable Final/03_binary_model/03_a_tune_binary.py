@@ -1,5 +1,5 @@
 """
-tune_binary.py — Hyperparameter search (Optuna) for the binary model
+tune_binary.py : Hyperparameter search (Optuna) for the binary model
 Photo vs Painting.
 
 Thin wrapper around binary_model.py: each trial generates a `cfg`, then
@@ -13,9 +13,9 @@ Usage:
     python3 tune_binary.py --trials 20
 
 Return:
-    - tune_binary_results/results.json       — all metrics
-    - tune_binary_results/best_config.json   — best config (config_binary.json format)
-    - tune_binary_results/comparison.png     — comparative plot
+    - tune_binary_results/results.json       : all metrics
+    - tune_binary_results/best_config.json   : best config (config_binary.json format)
+    - tune_binary_results/comparison.png     : comparative plot
 """
 from __future__ import annotations
 
@@ -112,7 +112,7 @@ def objective(trial: optuna.Trial, all_results: list[dict]) -> float:
     trial_id = trial.number
 
     print(f"\n{'='*70}")
-    print(f"TRIAL {trial_id+1} — backbone={cfg['backbone']}  lr_ft={cfg['lr_finetune']}  "
+    print(f"TRIAL {trial_id+1} : backbone={cfg['backbone']}  lr_ft={cfg['lr_finetune']}  "
           f"unfreeze={cfg['unfreeze_fraction']}  dense={cfg['dense_units']}")
     print(f"{'='*70}")
 
@@ -120,7 +120,7 @@ def objective(trial: optuna.Trial, all_results: list[dict]) -> float:
     train_ds = make_dataset("train", cfg, augment=True)
     val_ds   = make_dataset("val",   cfg, augment=False)
     # NOTE: no test_ds here. The test set must NEVER be seen during
-    # tuning (hyperparameter selection) — it is reserved for the final benchmark
+    # tuning (hyperparameter selection) : it is reserved for the final benchmark
     # in analyze_binary_tune_results.py.
 
     speed_guard = SpeedGuard()
@@ -179,7 +179,7 @@ def make_comparison_plot(results: list[dict]) -> None:
     x = np.arange(len(results))
 
     fig, axes = plt.subplots(1, 3, figsize=(16, 5))
-    fig.suptitle("Trial comparison — tune_binary (Optuna)", fontweight="bold")
+    fig.suptitle("Trial comparison : tune_binary (Optuna)", fontweight="bold")
 
     # Only VALIDATION metrics (the test set is reserved for the final analysis)
     axes[0].bar(x, [r["best_val_acc"] for r in results], color="steelblue", alpha=0.85)
@@ -252,7 +252,7 @@ def main() -> None:
     print(f"  Backbone   : {best['config']['backbone']}")
     print(f"  Val acc    : {best['best_val_acc']}   Val loss : {best['best_val_loss']}")
     print(f"  Val AUC    : {best.get('best_val_auc')}")
-    print(f"  → best_config.json ready to copy to config_binary.json")
+    print(f"  -> best_config.json ready to copy to config_binary.json")
     print(f"  (final test benchmark: run analyze_binary_tune_results.py)")
 
 

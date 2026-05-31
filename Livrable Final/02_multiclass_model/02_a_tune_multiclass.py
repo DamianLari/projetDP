@@ -1,5 +1,5 @@
 """
-tune_multiclass.py — Bayesian optimization (Optuna) for the multi-class 023 model.
+tune_multiclass.py : Bayesian optimization (Optuna) for the multi-class 023 model.
 
 Thin wrapper around multiclass_model.py: each trial generates a `cfg`, then
 reuses EXACTLY the same build_model / make_dataset / run_training as the
@@ -16,9 +16,9 @@ Usage:
     python3 tune_multiclass.py --trials 30
 
 Output (compatible with analyze_tune_results.py):
-  - tune_multiclass_results/results.json      — all metrics
-  - tune_multiclass_results/best_config.json  — best config
-  - tune_multiclass_results/comparison_*.png  — comparative plots
+  - tune_multiclass_results/results.json      : all metrics
+  - tune_multiclass_results/best_config.json  : best config
+  - tune_multiclass_results/comparison_*.png  : comparative plots
 """
 from __future__ import annotations
 
@@ -74,7 +74,7 @@ class SpeedGuard(callbacks.Callback):
         if len(self._step_times) == SPEED_CHECK_STEPS:
             avg = sum(self._step_times) / SPEED_CHECK_STEPS
             if avg > MAX_STEP_TIME_S:
-                print(f"\n  ⚡ SpeedGuard: average step = {avg:.2f}s > {MAX_STEP_TIME_S}s — trial skipped.")
+                print(f"\n  ⚡ SpeedGuard: average step = {avg:.2f}s > {MAX_STEP_TIME_S}s : trial skipped.")
                 self.model.stop_training = True
                 self.triggered = True
 
@@ -122,7 +122,7 @@ def objective(trial: optuna.Trial, all_results: list[dict]) -> float:
     trial_id = trial.number
 
     print(f"\n{'='*70}")
-    print(f"TRIAL {trial_id+1} — lr={cfg['learning_rate']}  bs={cfg['batch_size']}  "
+    print(f"TRIAL {trial_id+1} : lr={cfg['learning_rate']}  bs={cfg['batch_size']}  "
           f"filters={cfg['filters']}  dense={cfg['dense_units']}")
     print(f"{'='*70}")
 
@@ -147,7 +147,7 @@ def objective(trial: optuna.Trial, all_results: list[dict]) -> float:
 
     if speed_guard.triggered:
         tf.keras.backend.clear_session()
-        print(f"  → Trial {trial_id+1} skipped (too slow).")
+        print(f"  -> Trial {trial_id+1} skipped (too slow).")
         return _PENALTY
 
     val_accs   = history["val_accuracy"]
@@ -226,7 +226,7 @@ def make_comparison_plots(results: list[dict]) -> None:
     x = np.arange(n)
 
     fig, axes = plt.subplots(2, 3, figsize=(18, 10))
-    fig.suptitle("Trial Comparison — tune_multiclass (Optuna)", fontsize=14, fontweight="bold")
+    fig.suptitle("Trial Comparison : tune_multiclass (Optuna)", fontsize=14, fontweight="bold")
 
     ax = axes[0, 0]
     ax.bar(x, df["val_acc"], color=colors, alpha=0.8)
@@ -314,7 +314,7 @@ def print_summary_table(results: list[dict], best_idx: int) -> None:
     df = pd.DataFrame(rows)
     print(df.to_string(index=False, float_format="%.4f"))
     best = results[best_idx]
-    print(f"\n→ Best trial: T{best['trial_id']+1} "
+    print(f"\n-> Best trial: T{best['trial_id']+1} "
           f"(val_acc={best['best_val_acc']}, val_loss={best['best_val_loss']}, "
           f"params={best['n_params']:,})")
     print(f"  Configuration saved in: {RESULTS_DIR}/best_config.json")

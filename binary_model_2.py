@@ -101,7 +101,7 @@ def make_dataset(subset: str, cfg: dict, augment: bool = False) -> tf.data.Datas
     Clé perf : le décodage JPEG + resize (lourd, CPU) n'est fait qu'UNE fois grâce
     à .cache(). Les images sont mises en cache en uint8 (4× moins de RAM que float32),
     puis castées/augmentées/préprocessées à la volée à chaque epoch. Résultat : à
-    partir de l'epoch 2, le CPU ne re-décode plus rien → le GPU n'attend plus.
+    partir de l'epoch 2, le CPU ne re-décode plus rien -> le GPU n'attend plus.
 
     cfg["cache_dir"] (optionnel) : si fourni, cache sur disque au lieu de la RAM
     (utile si peu de RAM ; ~2 Go pour 14k images 224² en uint8 sinon).

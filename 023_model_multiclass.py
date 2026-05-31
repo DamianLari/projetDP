@@ -4,10 +4,10 @@
 Différence vs 022 : pipeline de données entièrement manuel avec tf.data.
 - Lecture fichiers par fichiers avec map + num_parallel_calls=AUTOTUNE
 - Décodage JPEG/PNG parallélisé sur tous les CPU cores disponibles
-- Augmentation déplacée dans le pipeline tf.data (hors modèle) → sur CPU en parallèle
+- Augmentation déplacée dans le pipeline tf.data (hors modèle) -> sur CPU en parallèle
   pendant que le GPU calcule le batch précédent
 - interleave pour maximiser le débit disque
-- Pas de cache VRAM → évite les OOM GPU
+- Pas de cache VRAM -> évite les OOM GPU
 
 Sortie :
     - models/multiclass_023_best.keras

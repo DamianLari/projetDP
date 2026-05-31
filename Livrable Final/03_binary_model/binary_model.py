@@ -1,5 +1,5 @@
 """
-binary_model.py — Shared module for the Photo vs Painting binary model.
+binary_model.py : Shared module for the Photo vs Painting binary model.
 
 Transfer learning (MobileNetV2 or EfficientNetB0) in two phases:
   Phase 1: frozen base, we train only the head.

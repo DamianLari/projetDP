@@ -1,5 +1,5 @@
 """
-03 — CNN binaire Photo vs Painting (transfer learning, 2 phases).
+03 : CNN binaire Photo vs Painting (transfer learning, 2 phases).
 
 Train the model define in binary_model.py from the hyperparameters specified in the config file config_binary.json. 
 Used downstream of the multi-class 023 to refine the Photo vs Painting distinction (the most confused classes).
@@ -41,11 +41,11 @@ def plot_curves(history_dict: dict, save_path: Path, title: str = "Binaire") -> 
     fig, axes = plt.subplots(1, 2, figsize=(14, 4))
     axes[0].plot(epochs, history_dict["loss"], label="train loss")
     axes[0].plot(epochs, history_dict["val_loss"], label="val loss")
-    axes[0].set_title(f"Loss — {title}"); axes[0].set_xlabel("Epoch")
+    axes[0].set_title(f"Loss : {title}"); axes[0].set_xlabel("Epoch")
     axes[0].legend(); axes[0].grid(True, alpha=0.3)
     axes[1].plot(epochs, history_dict["accuracy"], label="train acc")
     axes[1].plot(epochs, history_dict["val_accuracy"], label="val acc")
-    axes[1].set_title(f"Accuracy — {title}"); axes[1].set_xlabel("Epoch")
+    axes[1].set_title(f"Accuracy : {title}"); axes[1].set_xlabel("Epoch")
     axes[1].legend(); axes[1].grid(True, alpha=0.3)
     plt.tight_layout(); plt.savefig(save_path, dpi=120); plt.close()
 

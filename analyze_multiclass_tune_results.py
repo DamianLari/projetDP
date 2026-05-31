@@ -605,10 +605,10 @@ def export_best_configs(bench_results: list[dict]) -> None:
     print(f"\n{'='*70}\nCONFIGS EXPORTÉES (prêtes pour config_multiclass.json)\n{'='*70}")
     print(f"  Meilleure accuracy   : {best_acc['label']}  "
           f"acc={best_acc['test_acc']}  loss={best_acc['test_loss']}")
-    print(f"    → {acc_path}")
+    print(f"    -> {acc_path}")
     print(f"  Meilleur rapport     : {best_eff['label']}  "
           f"acc={best_eff['test_acc']}  params_train={int(best_eff['n_params_train']):,}")
-    print(f"    → {eff_path}")
+    print(f"    -> {eff_path}")
 
 
 if __name__ == "__main__":

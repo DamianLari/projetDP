@@ -1,4 +1,4 @@
-# TouNum — Classification d'images par type (CESI)
+# TouNum : Classification d'images par type
 
 Pipeline de classification d'images en **5 classes** : `Painting`, `Photo`, `Schematics`, `Sketch`, `Text`.
 
@@ -62,7 +62,7 @@ data_split/
 └── test/{classe}/…
 ```
 
-> ⚠️ À lancer **avant** tout entraînement (tous les scripts lisent `data_split/`).
+> À lancer **avant** tout entraînement (tous les scripts lisent `data_split/`).
 
 ---
 
@@ -87,8 +87,8 @@ exactement le même `build_model` / `make_dataset` / `run_training`.
 
 ### Approche
 CNN **from-scratch** (style VGG simplifié) entraîné sur nos données :
-- blocs `Conv2D → BatchNorm → MaxPooling → Dropout` ;
-- **GlobalAveragePooling** au lieu d'un `Flatten` → très peu de paramètres ;
+- blocs `Conv2D -> BatchNorm -> MaxPooling -> Dropout` ;
+- **GlobalAveragePooling** au lieu d'un `Flatten` -> très peu de paramètres ;
 - tête `Dense + Dropout` + sortie `softmax` (5 classes) ;
 - régularisation **L2** + **Dropout** ;
 - optimiseur **Adam**, perte `SparseCategoricalCrossentropy`.
@@ -107,14 +107,14 @@ Le meilleur modèle obtenu fait **~40 000 paramètres** pour ~92 % de test accur
 
 ### Lancer
 ```bash
-# 1) recherche d'hyperparamètres (chaque trial est entraîné en entier)
+# 1 recherche d'hyperparamètres (chaque trial est entraîné en entier)
 python3 tune_multiclass.py --trials 30
-# → tune_multiclass_results/ (results.json, best_config.json, comparison_*.png)
+# -> tune_multiclass_results/ (results.json, best_config.json, comparison_*.png)
 
-# 2) copier la meilleure config puis entraîner le modèle final
+# 2 copier la meilleure config puis entraîner le modèle final
 cp tune_multiclass_results/best_config.json config_multiclass.json
 python3 02_model_multiclass.py
-# → models/multiclass_023_best.keras
+# -> models/multiclass_023_best.keras
 ```
 
 ---
@@ -146,12 +146,12 @@ fine-tuning.
 ```bash
 # 1) recherche d'hyperparamètres (epochs réduits pour aller vite)
 python3 tune_binary.py --trials 15
-# → tune_binary_results/ (results.json, best_config.json, comparison.png)
+# -> tune_binary_results/ (results.json, best_config.json, comparison.png)
 
 # 2) entraînement final avec les meilleurs hyperparamètres
 cp tune_binary_results/best_config.json config_binary.json
 python3 03_model_binary_photo_vs_painting.py
-# → models/binary_photo_painting_best.keras
+# -> models/binary_photo_painting_best.keras
 ```
 
 > Différence avec le multi-class : le tuner binaire entraîne sur des **epochs réduits**
@@ -172,10 +172,10 @@ python3 analyze_binary_tune_results.py       # lit tune_binary_results/
 
 Produit (dans `<dossier>/analysis/`) :
 - **bar charts** accuracy / loss / (recall|AUC) par modèle ;
-- **scatter accuracy vs nombre de paramètres** → identifie le meilleur rapport
+- **scatter accuracy vs nombre de paramètres** -> identifie le meilleur rapport
   performance/légèreté (modèle le plus léger ET performant) ;
 - **matrices de confusion** par modèle ;
-- **importance des hyperparamètres** (corrélation avec la test accuracy) → quel
+- **importance des hyperparamètres** (corrélation avec la test accuracy) -> quel
   hyperparamètre influe le plus sur les résultats.
 
 > Note paramètres : *params déployés* = poids du réseau (ce qui compte pour
@@ -203,7 +203,7 @@ modèles, il suffit d'y changer les chemins (aucune modification de code) :
 
 ```bash
 python3 04_evaluation_benchmark.py
-# → figures/04_*.png + tableau comparatif dans la console
+# -> figures/04_*.png + tableau comparatif dans la console
 ```
 
 ---

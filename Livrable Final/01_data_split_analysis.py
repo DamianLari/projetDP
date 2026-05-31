@@ -1,5 +1,5 @@
 """
-01 — Dataset split + resize + exploratory analysis.
+01 : Dataset split + resize + exploratory analysis.
 
 Usage:
     python3 01_data_split_analysis.py
@@ -318,7 +318,7 @@ def main() -> None:
                     })
 
             except Exception as e:
-                print(f"Image illisible : {p} — {e}")
+                print(f"Image illisible : {p} : {e}")
 
     df_sizes = pd.DataFrame(rows)
 
@@ -390,7 +390,7 @@ def main() -> None:
                 )
 
             except Exception:
-                axes[i, j].set_title(f"{c} — erreur")
+                axes[i, j].set_title(f"{c} : erreur")
 
             axes[i, j].axis("off")
 

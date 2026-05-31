@@ -1,5 +1,5 @@
 """
-multiclass_model.py — Shared module for the 5-class multi-class CNN (model 023).
+multiclass_model.py : Shared module for the 5-class multi-class CNN (model 023).
 
 Custom tf.data pipeline and architecture EXTRACTED IDENTICALLY from tune_023.py
 (only Optuna is removed: this is the pure "business" code, ready for reuse).
@@ -160,6 +160,6 @@ def run_training(
         verbose=verbose
         )
     if verbose:
-        print(f"\nTraining: {(time.time()-t0)/60:.1f} min — {len(hist.history['loss'])} epochs")
+        print(f"\nTraining: {(time.time()-t0)/60:.1f} min : {len(hist.history['loss'])} epochs")
 
     return model, hist.history

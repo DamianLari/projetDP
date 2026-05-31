@@ -1,5 +1,5 @@
 """
-analyze_binary_tune_results.py — Analyse complète des modèles binaires tunés.
+analyze_binary_tune_results.py : Analyse complète des modèles binaires tunés.
 
 Pour chaque modèle de tune_binary_results/ :
   - model.summary()
@@ -124,7 +124,7 @@ def compute_hp_importance(results: list[dict]) -> pd.Series:
 def plot_bar_metrics(df: pd.DataFrame, save_path: Path) -> None:
     n, x = len(df), np.arange(len(df))
     fig, axes = plt.subplots(1, 3, figsize=(max(14, n * 0.9), 5))
-    fig.suptitle("Benchmark des modèles binaires tunés — jeu de test", fontsize=14, fontweight="bold")
+    fig.suptitle("Benchmark des modèles binaires tunés : jeu de test", fontsize=14, fontweight="bold")
     for ax, col, title, cible in [
         (axes[0], "test_acc", "Test Accuracy", 0.95),
         (axes[1], "test_auc", "Test AUC", None),
@@ -155,7 +155,7 @@ def plot_bar_acc_loss_recall(df: pd.DataFrame, save_path: Path) -> None:
     colors_ok = ["#2ecc71" if m else "#e74c3c" for m in df["meets_target"]]
 
     fig, axes = plt.subplots(1, 3, figsize=(max(14, n * 0.9), 5))
-    fig.suptitle("Benchmark des modèles binaires tunés — jeu de test",
+    fig.suptitle("Benchmark des modèles binaires tunés : jeu de test",
                  fontsize=14, fontweight="bold")
 
     # Accuracy
@@ -277,7 +277,7 @@ def main() -> None:
         trial_id = r["trial_id"]
         model_path = RESULTS_DIR / f"model_trial_{trial_id + 1:02d}.keras"
         label = f"T{trial_id+1:02d}"
-        print(f"\n{'─'*60}\n{label}  —  {model_path.name}\n{'─'*60}")
+        print(f"\n{'─'*60}\n{label}  :  {model_path.name}\n{'─'*60}")
         if not model_path.exists():
             print(f"  ⚠ manquant : {model_path}")
             continue
@@ -338,7 +338,7 @@ def main() -> None:
     print(df[cols].to_string(index=False, float_format="%.4f"))
 
     best = df.loc[df["test_acc"].idxmax()]
-    print(f"\n→ Meilleur modèle : {best['label']} ({best['backbone']})  "
+    print(f"\n-> Meilleur modèle : {best['label']} ({best['backbone']})  "
           f"acc={best['test_acc']}  auc={best['test_auc']}  params={int(best['n_params']):,}")
 
     print(f"\n{'='*70}\nGRAPHIQUES\n{'='*70}")
@@ -396,10 +396,10 @@ def export_best_configs(bench_records: list[dict]) -> None:
     print(f"\n{'='*70}\nCONFIGS EXPORTÉES (prêtes pour config_binary.json)\n{'='*70}")
     print(f"  Meilleure accuracy   : {best_acc['label']} ({best_acc['backbone']})  "
           f"acc={best_acc['test_acc']}  loss={best_acc['test_loss']}")
-    print(f"    → {acc_path}")
+    print(f"    -> {acc_path}")
     print(f"  Meilleur rapport     : {best_eff['label']} ({best_eff['backbone']})  "
           f"acc={best_eff['test_acc']}  params_train={int(best_eff['n_params_train']):,}")
-    print(f"    → {eff_path}")
+    print(f"    -> {eff_path}")
 
 
 if __name__ == "__main__":

@@ -1,5 +1,5 @@
 """
-02 — CNN multi-class 5 classes (modèle 023).
+02 : CNN multi-class 5 classes (modèle 023).
 
 Train the model define in "multiclass_model.py" from the hyperparameters specified in the config file "config_multiclass.json". 
 The training pipeline is also defined in multiclass_model.py (no duplication here).

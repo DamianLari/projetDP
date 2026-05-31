@@ -1,5 +1,5 @@
 """
-04 — final benchmark: alone multi-class vs cascade pipeline (multi-class + binaire).
+04 : final benchmark: alone multi-class vs cascade pipeline (multi-class + binaire).
 
 The cascade pipeline : the multi-class model predicts the class ; if the prediction is
 Painting or Photo (the most confused classes), the image is sent to the specialized
@@ -84,12 +84,12 @@ def plot_curves(history_dict: dict, save_path: Path, title: str) -> None:
     axes[0].plot(epochs, history_dict["loss"], label="train loss")
     if "val_loss" in history_dict:
         axes[0].plot(epochs, history_dict["val_loss"], label="val loss")
-    axes[0].set_title(f"Loss — {title}"); axes[0].set_xlabel("Epoch"); axes[0].legend(); axes[0].grid(True, alpha=0.3)
+    axes[0].set_title(f"Loss : {title}"); axes[0].set_xlabel("Epoch"); axes[0].legend(); axes[0].grid(True, alpha=0.3)
     if "accuracy" in history_dict:
         axes[1].plot(epochs, history_dict["accuracy"], label="train acc")
     if "val_accuracy" in history_dict:
         axes[1].plot(epochs, history_dict["val_accuracy"], label="val acc")
-    axes[1].set_title(f"Accuracy — {title}"); axes[1].set_xlabel("Epoch"); axes[1].legend(); axes[1].grid(True, alpha=0.3)
+    axes[1].set_title(f"Accuracy : {title}"); axes[1].set_xlabel("Epoch"); axes[1].legend(); axes[1].grid(True, alpha=0.3)
     plt.tight_layout(); plt.savefig(save_path, dpi=120); plt.close()
 
 
@@ -118,7 +118,7 @@ def main() -> None:
 
     class_names = cfg["class_names"]
     print("=" * 70)
-    print("BENCHMARK — multi-class seul vs cascade pipeline (multi-class + binaire)")
+    print("BENCHMARK : multi-class seul vs cascade pipeline (multi-class + binaire)")
     print(f"  Multi-class : {cfg['multiclass_model']}")
     print(f"  Binaire     : {cfg['binary_model']} ({cfg['binary_backbone']})")
     print("=" * 70)
@@ -160,7 +160,7 @@ def main() -> None:
             "Multi-class vs brut")
     plot_cm(y_true, y_pred_multi, class_names, FIGURES_DIR / "04_cm_multiclass_norm.png",
             "Multi-class vs normalised", normalize=True)
-    print("\nClassification report — multi-class :")
+    print("\nClassification report : multi-class :")
     print(classification_report(y_true, y_pred_multi, target_names=class_names, digits=4))
 
     # Cascade pipeline
@@ -185,7 +185,7 @@ def main() -> None:
             "Cascade vs brut")
     plot_cm(y_true, y_pred_cascade, class_names, FIGURES_DIR / "04_cm_cascade_norm.png",
             "Cascade vs normalised", normalize=True)
-    print("\nClassification report — cascade pipeline:")
+    print("\nClassification report : cascade pipeline:")
     print(classification_report(y_true, y_pred_cascade, target_names=class_names, digits=4))
 
     # Global comparison
@@ -209,7 +209,7 @@ def main() -> None:
     print(f"  Cascade pipeline: {accuracy_score(yt, y_pred_cascade[mask_pp]):.4f}")
 
     print("\n" + "=" * 70)
-    print(f"Benchmark finished in {time.time()-t0:.1f} s — plots in {FIGURES_DIR}/")
+    print(f"Benchmark finished in {time.time()-t0:.1f} s : plots in {FIGURES_DIR}/")
     print("=" * 70)
 
 if __name__ == "__main__":

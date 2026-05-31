@@ -178,7 +178,7 @@ def main() -> None:
     print(classification_report(y_true, y_pred_multi, target_names=class_names, digits=4))
 
     # --- Pipeline cascadé ---
-    print("\n4. Pipeline cascadé (multi-class → binaire sur Painting/Photo)...")
+    print("\n4. Pipeline cascadé (multi-class -> binaire sur Painting/Photo)...")
     test_ds_bin = make_binary_probs_ds(cfg)
     probs_bin = np.concatenate([
         bin_model(imgs, training=False).numpy().flatten() for imgs in test_ds_bin
