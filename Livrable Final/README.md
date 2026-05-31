@@ -183,9 +183,32 @@ Meilleur trial : T11 : test_acc 0.983, test_auc 0.997.
 
 ---
 
-### 8. Benchmark final
+### 8. Tensorboard
+
+Depuis la racine du projet : 
+```tensorboard --logdir logs```.
+
+Pour le run :
+```http://localhost:6006```.
+
+### 9. Benchmark
 
 `04_evaluation_benchmark.py` évalue la pipeline complète (multiclass -> binaire si Painting/Photo) sur le jeu de test. Configuration dans `config_benchmark.json` (chemins des modèles à benchmarker).
+
+### 10. Benchmark Cascade
+En complément du benchmark et de l’évaluation sur dataset figé, un script de cascade pipeline en inférence réelle est fourni afin de tester le modèle sur des images totalement inconnues.
+
+Ce script (05_cascade_pipeline.py) permet de fournir un dossier d’images via argument CLI (--input_dir). Chaque image est ensuite traitée par le modèle de classification multiclasses (5 classes). Lorsque la prédiction appartient aux classes les plus ambiguës (Photo ou Painting), une seconde étape de raffinement est déclenchée via un modèle binaire spécialisé (Painting vs Photo), afin d’améliorer la précision sur cette frontière critique.
+
+Les images sont ensuite automatiquement triées et copiées dans un dossier de sortie (--output_dir, par défaut Filtered_images/) organisé par classe prédite :
+```
+Filtered_images/
+├── Photo/
+├── Painting/
+├── Schematics/
+├── Sketch/
+└── Text/
+```
 
 ## Conclusion Générale et Bilan
 Le travail d'ingénierie et de recherche mené dans ce premier livrable valide la viabilité du tri automatisé pour la chaîne de production de TouNum. Face au défi technique posé par la variété structurelle des données, la conception d'un système d'architecture en cascade a prouvé sa supériorité face aux approches naïves.

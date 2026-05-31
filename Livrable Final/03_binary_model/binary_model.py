@@ -18,6 +18,7 @@ Key point corrected vs older version:
 """
 from __future__ import annotations
 
+from datetime import datetime
 import sys
 import time
 from pathlib import Path
@@ -210,8 +211,12 @@ def run_training(
                                              save_best_only=True, verbose=verbose))
 
     t0 = time.time()
-    hist1 = model.fit(train_ds, validation_data=val_ds,
-                      epochs=cfg["epochs_head"], callbacks=cb1, verbose=verbose)
+
+    log_dir_phase1 = (Path("logs") / "binary" / "phase1" / datetime.now().strftime("%Y%m%d-%H%M%S"))
+
+    cb1.append(callbacks.TensorBoard(log_dir=str(log_dir_phase1), histogram_freq=1))
+
+    hist1 = model.fit(train_ds, validation_data=val_ds, epochs=cfg["epochs_head"], callbacks=cb1, verbose=verbose)
     if verbose:
         print(f"Phase 1: {(time.time()-t0)/60:.1f} min")
 
@@ -236,6 +241,11 @@ def run_training(
         cb2.extend(extra_callbacks)
 
     t0 = time.time()
+
+    log_dir_phase2 = (Path("logs") / "binary" / "phase2" / datetime.now().strftime("%Y%m%d-%H%M%S"))
+
+    cb2.append(callbacks.TensorBoard(log_dir=str(log_dir_phase2), histogram_freq=1))
+
     hist2 = model.fit(train_ds, validation_data=val_ds, epochs=cfg["epochs_finetune"], callbacks=cb2, verbose=verbose)
     if verbose:
         print(f"Phase 2: {(time.time()-t0)/60:.1f} min")

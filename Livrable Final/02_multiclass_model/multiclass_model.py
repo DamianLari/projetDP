@@ -15,6 +15,7 @@ from __future__ import annotations
 import sys
 import time
 from pathlib import Path
+from datetime import datetime
 import numpy as np
 
 # Allows importing utils from the root of the Deliverable
@@ -28,7 +29,7 @@ SPLIT_DIR = Path(__file__).resolve().parent.parent / "data_split"
 
 IMG_H, IMG_W = IMG_SIZE
 AUTOTUNE = tf.data.AUTOTUNE
-N_CLASSES = len(CLASS_NAMES)
+N_CLASSES = 4 if "PhotoPainting" in CLASS_NAMES else len(CLASS_NAMES)
 
 # tf.data Pipeline  (identical to tune_023.py)
 
@@ -43,9 +44,27 @@ def _get_label(file_path: tf.Tensor) -> tf.Tensor:
     parts = tf.strings.split(file_path, "/")
     n = tf.shape(parts)[0]
     class_name = parts[n - 2]
-    matches = tf.cast(tf.equal(class_name, tf.constant(CLASS_NAMES)), tf.int32)
-    return tf.cast(tf.argmax(matches), tf.int32)
+    if N_CLASSES == 4:
 
+        class_name = tf.cond(
+            tf.logical_or(
+                tf.equal(class_name, "Painting"),
+                tf.equal(class_name, "Photo")
+            ),
+            lambda: tf.constant("PhotoPainting"),
+            lambda: class_name
+        )
+        class_names = tf.constant([
+            "PhotoPainting",
+            "Schematics",
+            "Sketch",
+            "Text"
+        ])
+
+    else:
+        class_names = tf.constant(CLASS_NAMES)
+    matches = tf.cast(tf.equal(class_name, class_names), tf.int32)
+    return tf.cast(tf.argmax(matches), tf.int32)
 
 def _make_augment_fn(aug: dict):
     def _augment(img):
@@ -91,8 +110,7 @@ def build_model(cfg: dict) -> models.Model:
         x = layers.Dropout(dp[d_key])(x)
 
     x = layers.GlobalAveragePooling2D()(x)
-    x = layers.Dense(cfg["dense_units"], activation="relu",
-                     kernel_regularizer=regularizers.l2(cfg["l2"]))(x)
+    x = layers.Dense(cfg["dense_units"], activation="relu", kernel_regularizer=regularizers.l2(cfg["l2"]))(x)
     x = layers.Dropout(dp["head"])(x)
     out = layers.Dense(N_CLASSES, activation="softmax", name="predictions")(x)
     return models.Model(inp, out, name="cnn_trial")
@@ -126,16 +144,10 @@ def run_training(
     cb = []
     if extra_callbacks:
         cb.extend(extra_callbacks)
-    cb.append(callbacks.EarlyStopping(monitor="val_loss",
-                                      patience=cfg["early_stopping_patience"],
-                                      restore_best_weights=True, verbose=verbose))
-    cb.append(callbacks.ReduceLROnPlateau(monitor="val_loss",
-                                          factor=cfg["reduce_lr_factor"],
-                                          patience=cfg["reduce_lr_patience"],
-                                          min_lr=1e-6, verbose=verbose))
+    cb.append(callbacks.EarlyStopping(monitor="val_loss", patience=cfg["early_stopping_patience"], restore_best_weights=True, verbose=verbose))
+    cb.append(callbacks.ReduceLROnPlateau(monitor="val_loss", factor=cfg["reduce_lr_factor"], patience=cfg["reduce_lr_patience"], min_lr=1e-6, verbose=verbose))
     if model_path:
-        cb.append(callbacks.ModelCheckpoint(str(model_path), monitor="val_loss",
-                                            save_best_only=True, verbose=verbose))
+        cb.append(callbacks.ModelCheckpoint(str(model_path), monitor="val_loss", save_best_only=True, verbose=verbose))
 
     t0 = time.time()
 
@@ -150,6 +162,17 @@ def run_training(
         for i, count in enumerate(class_counts)
     }
     print(f"Class weights: {class_weight}")
+
+    log_dir = (Path("logs") / "multiclass" / datetime.now().strftime("%Y%m%d-%H%M%S"))
+
+    cb.append(
+        callbacks.TensorBoard(
+            log_dir=str(log_dir),
+            histogram_freq=1,
+            write_graph=True,
+            write_images=False,
+        )
+    )
 
     hist = model.fit(
         train_ds,

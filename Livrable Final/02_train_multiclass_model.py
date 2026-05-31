@@ -33,7 +33,6 @@ from utils import CLASS_NAMES, HISTORIES_DIR, MODELS_DIR, SPLIT_DIR, set_seeds
 CFG_PATH = MODEL_DIR / "config_multiclass.json"
 FIGURES_DIR = Path("figures")
 
-
 def plot_curves(history_dict: dict, save_path: Path) -> None:
     epochs = range(1, len(history_dict["loss"]) + 1)
     fig, axes = plt.subplots(1, 2, figsize=(14, 4))
@@ -46,7 +45,6 @@ def plot_curves(history_dict: dict, save_path: Path) -> None:
     axes[1].set_title("Accuracy"); axes[1].set_xlabel("Epoch")
     axes[1].legend(); axes[1].grid(True, alpha=0.3)
     plt.tight_layout(); plt.savefig(save_path, dpi=120); plt.close()
-
 
 def main() -> None:
     with open(CFG_PATH, "r", encoding="utf-8") as f:
@@ -77,8 +75,7 @@ def main() -> None:
     history_path = HISTORIES_DIR / "multiclass_023_history.json"
 
     print("\n2. Entraînement...")
-    model, history = run_training(cfg, train_ds, val_ds,
-                                  model_path=model_path, verbose=1)
+    model, history = run_training(cfg, train_ds, val_ds, model_path=model_path, verbose=1)
 
     with open(history_path, "w", encoding="utf-8") as f:
         json.dump({k: [float(x) for x in v] for k, v in history.items()}, f, indent=2)

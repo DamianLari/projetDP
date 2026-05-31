@@ -32,7 +32,8 @@ from sklearn.metrics import (
     accuracy_score, classification_report, confusion_matrix,
     f1_score, precision_score, recall_score,
 )
-
+import sys
+sys.path.append(str(Path(__file__).resolve().parent / "03_binary_model"))
 from binary_model import _preprocess_for
 from utils import SPLIT_DIR, load_history, set_seeds, SEED
 
