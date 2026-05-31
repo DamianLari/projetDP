@@ -1,14 +1,3 @@
-"""
-Fonctions utilitaires partagées entre les notebooks du projet TouNum.
-
-Version optimisée :
-- Chargement **complet en mémoire** une seule fois (resize fait une seule fois)
-- tf.data.Dataset avec cache + prefetch AUTOTUNE
-- Augmentation via keras preprocessing layers (rapide, intégrable au modèle)
-
-Auteur : projet CESI TouNum
-"""
-
 from __future__ import annotations
 
 import json
@@ -24,16 +13,12 @@ import tensorflow as tf
 from PIL import Image
 from sklearn.metrics import classification_report, confusion_matrix
 
-
-# ----------------------------------------------------------------------------
-# Config centrale (config.json)
-# ----------------------------------------------------------------------------
+# Main config (config.json)
 
 _CONFIG_PATH = Path(__file__).parent / "config.json"
 with open(_CONFIG_PATH, "r", encoding="utf-8") as _f:
     CFG = json.load(_f)
 
-# Constantes exposées
 CLASS_NAMES: list[str] = CFG["class_names"]
 IMG_SIZE: tuple[int, int] = tuple(CFG["img_size"])
 BATCH_SIZE: int = CFG["batch_size"]
@@ -46,10 +31,7 @@ HISTORIES_DIR = Path("histories")
 
 IMG_EXTENSIONS = {".jpg", ".jpeg", ".png", ".bmp", ".gif", ".tiff", ".webp"}
 
-
-# ----------------------------------------------------------------------------
-# Chargement in-memory (clé pour la perf)
-# ----------------------------------------------------------------------------
+# In memory loading of the dataset
 
 def _list_images(dir_: Path) -> list[Path]:
     return sorted(p for p in dir_.rglob("*")
@@ -89,7 +71,7 @@ def load_split_in_memory(
         X_train, y_train, X_val, y_val, X_test, y_test
         class_indices, num_classes
 
-    use_uint8=True permet de stocker en uint8 (4× moins de RAM) ; la normalisation
+    use_uint8=True permet de stocker en uint8 (4x moins de RAM) ; la normalisation
     en [0, 1] est alors faite dans le tf.data pipeline (en float16/32).
     """
     if classes is None:
@@ -131,10 +113,7 @@ def load_split_in_memory(
     out["classes"] = classes
     return out
 
-
-# ----------------------------------------------------------------------------
 # tf.data pipelines
-# ----------------------------------------------------------------------------
 
 def make_tf_dataset(
     X: np.ndarray,
@@ -162,7 +141,6 @@ def make_tf_dataset(
     ds = ds.prefetch(tf.data.AUTOTUNE)
     return ds
 
-
 def make_augmentation_layer() -> tf.keras.Sequential:
     aug = CFG["augmentation"]
     return tf.keras.Sequential([
@@ -173,9 +151,7 @@ def make_augmentation_layer() -> tf.keras.Sequential:
     ], name="augmentation")
 
 
-# ----------------------------------------------------------------------------
-# Sauvegarde / chargement des histories
-# ----------------------------------------------------------------------------
+# Save/load history
 
 def save_history(history: tf.keras.callbacks.History, path: Path | str) -> None:
     path = Path(path)
@@ -189,10 +165,7 @@ def load_history(path: Path | str) -> dict[str, list[float]]:
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
 
-
-# ----------------------------------------------------------------------------
 # Plots
-# ----------------------------------------------------------------------------
 
 def plot_history(history_dict: dict[str, list[float]], title: str = "",
                  save_path: Path | str | None = None) -> None:
@@ -242,10 +215,7 @@ def plot_confusion_matrix(y_true, y_pred, class_names, title="Matrice de confusi
 def print_classification_report(y_true, y_pred, class_names):
     print(classification_report(y_true, y_pred, target_names=class_names, digits=4))
 
-
-# ----------------------------------------------------------------------------
-# Reproductibilité
-# ----------------------------------------------------------------------------
+# Reproducibility
 
 def set_seeds(seed: int = SEED) -> None:
     os.environ["PYTHONHASHSEED"] = str(seed)

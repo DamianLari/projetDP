@@ -147,8 +147,29 @@ def run_training(
                                             save_best_only=True, verbose=verbose))
 
     t0 = time.time()
-    hist = model.fit(train_ds, validation_data=val_ds,
-                     epochs=cfg["epochs"], callbacks=cb, verbose=verbose)
+
+    import numpy as np
+
+    n_classes = cfg.get("n_classes", len(cfg["class_names"]))
+    class_counts = np.zeros(n_classes, dtype=np.int64)
+    for _, labels in train_ds.unbatch():
+        class_counts[int(labels.numpy())] += 1
+
+    total = class_counts.sum()
+    class_weight = {
+        i: total / (n_classes * count)
+        for i, count in enumerate(class_counts)
+    }
+    print(f"Class weights : {class_weight}")
+
+    hist = model.fit(
+        train_ds,
+        validation_data=val_ds,
+        epochs=cfg["epochs"],
+        callbacks=cb,
+        class_weight=class_weight,
+        verbose=verbose
+        )
     if verbose:
         print(f"\nEntraînement : {(time.time()-t0)/60:.1f} min — {len(hist.history['loss'])} epochs")
 

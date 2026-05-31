@@ -1,19 +1,18 @@
 """
 03 — CNN binaire Photo vs Painting (transfer learning, 2 phases).
 
-Entraîne le modèle défini dans binary_model.py à partir des hyperparamètres
-de config_binary.json. Utilisé en aval du multi-class 023 pour raffiner la
-distinction Photo / Painting (classes les plus confondues).
+Train the model define in binary_model.py from the hyperparameters specified in the config file config_binary.json. 
+Used downstream of the multi-class 023 to refine the Photo vs Painting distinction (the most confused classes).
 
-Architecture et pipeline : voir binary_model.py (aucune duplication ici).
+Architecture and pipeline: see binary_model.py (no duplication here).
 
-Sortie :
+Usage:
+    python3 03_model_binary_photo_vs_painting.py
+
+Return:
     - models/binary_photo_painting_best.keras
     - histories/binary_photo_painting_history.json
     - figures/03_binary_curves.png
-
-Usage :
-    python3 03_model_binary_photo_vs_painting.py
 """
 from __future__ import annotations
 
@@ -21,7 +20,7 @@ import json
 import sys
 from pathlib import Path
 
-# Le module binary_model et son config vivent dans 03_binary_model/
+# The module binary_model and its config live in 03_binary_model/
 MODEL_DIR = Path(__file__).resolve().parent / "03_binary_model"
 sys.path.insert(0, str(MODEL_DIR))
 
@@ -79,15 +78,15 @@ def main() -> None:
     model, history = run_training(cfg, train_ds, val_ds,
                                   model_path=model_path, verbose=1)
 
-    # save_history attend un objet History ; on a un dict → sauvegarde directe
+    # save_history needs an object History -> automatic save
     with open(history_path, "w", encoding="utf-8") as f:
         json.dump({k: [float(x) for x in v] for k, v in history.items()}, f, indent=2)
-    print(f"\nHistory : {history_path}")
-    print(f"Modèle  : {model_path}")
+    print(f"\n History : {history_path}")
+    print(f"Model: {model_path}")
 
     fig_path = FIGURES_DIR / "03_binary_curves.png"
     plot_curves(history, fig_path, title=f"Binaire {cfg['backbone']} Photo vs Painting")
-    print(f"Courbes : {fig_path}")
+    print(f"Curves: {fig_path}")
 
     print("\n3. Évaluation sur le test set...")
     results = model.evaluate(test_ds, verbose=1)
@@ -95,9 +94,8 @@ def main() -> None:
         print(f"  {name:10s} : {val:.4f}")
 
     print("\n" + "=" * 70)
-    print(f"Terminé. Modèle : {model_path}")
+    print(f"Finish. Model: {model_path}")
     print("=" * 70)
-
 
 if __name__ == "__main__":
     main()

@@ -1,12 +1,12 @@
 """
-01 — Split du dataset + resize + analyse exploratoire.
+01 — Dataset split + resize + exploratory analysis.
 
-Usage :
+Usage:
     python3 01_data_split_analysis.py
 
-Sortie :
+Return:
     - data_split/{train,val,test}/{classe}/
-    - toutes les images redimensionnées en 256x256 RGB
+    - all the resized images to 256x256 RGB
     - figures/01_*.png
 """
 
@@ -29,10 +29,7 @@ from PIL import Image, ImageOps
 
 from utils import IMG_SIZE
 
-
-# ----------------------------------------------------------------------------
 # Configuration
-# ----------------------------------------------------------------------------
 
 SEED = 42
 
@@ -56,10 +53,7 @@ IMG_EXTENSIONS = {
     ".webp",
 }
 
-
-# ----------------------------------------------------------------------------
 # Helpers
-# ----------------------------------------------------------------------------
 
 def list_images(class_dir: Path) -> list[Path]:
     return [
@@ -70,7 +64,7 @@ def list_images(class_dir: Path) -> list[Path]:
 
 
 def filter_valid_images(images: list[Path]) -> tuple[list[Path], list[Path]]:
-    """Retourne (valides, corrompues) en testant l'ouverture de chaque image."""
+    """Return (good, corrupted) by testing the opening of each image."""
     valid, corrupted = [], []
     for p in images:
         try:
@@ -83,9 +77,8 @@ def filter_valid_images(images: list[Path]) -> tuple[list[Path], list[Path]]:
 
 
 def find_duplicates(images_by_class: dict[str, list[Path]]) -> dict[str, list[Path]]:
-    """Détecte les doublons inter-classes et intra-classe par hash MD5.
-
-    Retourne un dict hash -> [liste de paths] pour les hashs en double.
+    """Detect duplicates across and within classes using MD5 hash.
+    Returns a dictionary mapping hashes to lists of image paths for duplicated images.
     """
     hash_map: dict[str, list[Path]] = {}
     for paths in images_by_class.values():
@@ -121,24 +114,24 @@ def split_class(
 
 def resize_and_save_image(src_path: Path, dst_path: Path) -> bool:
     """
-    Resize une image en conservant le ratio avec crop centré.
-    Sauvegarde en RGB JPEG.
+    Resize an image while preserving the aspect ratio with a centered crop.
+    Save as RGB JPEG.
     """
 
     try:
         with Image.open(src_path) as img:
 
-            # conversion RGB
+            # conversion to RGB
             img = img.convert("RGB")
 
-            # resize + crop centré
+            # resize + center crop
             img = ImageOps.fit(
                 img,
                 TARGET_SIZE,
                 method=Image.Resampling.LANCZOS,
             )
 
-            # extension jpg propre
+            # clean jpg
             dst_path = dst_path.with_suffix(".jpg")
 
             img.save(
@@ -154,10 +147,7 @@ def resize_and_save_image(src_path: Path, dst_path: Path) -> bool:
         print(f"Erreur image {src_path} : {e}")
         return False
 
-
-# ----------------------------------------------------------------------------
 # Main
-# ----------------------------------------------------------------------------
 
 def main() -> None:
 
@@ -168,19 +158,17 @@ def main() -> None:
 
     FIGURES_DIR.mkdir(exist_ok=True)
 
-    # ------------------------------------------------------------------------
     # 1. Scan dataset
-    # ------------------------------------------------------------------------
 
     print("=" * 70)
-    print("1. Scan du dataset")
+    print("1. Dataset scan:")
     print("=" * 70)
 
     print(f"Dataset dir : {DATASET_DIR.resolve()}")
 
     if not DATASET_DIR.exists():
         raise SystemExit(
-            f"ERREUR : {DATASET_DIR} introuvable."
+            f"ERREUR : {DATASET_DIR} not found."
         )
 
     EXPECTED_CLASSES = {
@@ -197,7 +185,7 @@ def main() -> None:
         if d.is_dir() and d.name in EXPECTED_CLASSES
     ])
 
-    print(f"Classes trouvées : {classes}")
+    print(f"Class found : {classes}")
 
     images_by_class_raw = {
         c: list_images(DATASET_DIR / c)
@@ -207,7 +195,7 @@ def main() -> None:
     for c, imgs in images_by_class_raw.items():
         print(f"  {c:12s} : {len(imgs):6d} images trouvées")
 
-    # --- Filtrage des images corrompues AVANT le split ---
+    # Filtering of corrupted images + reporting
     print("\n--- Vérification des images corrompues ---")
     images_by_class: dict[str, list[Path]] = {}
     total_corrupted = 0
@@ -216,15 +204,15 @@ def main() -> None:
         images_by_class[c] = valid
         total_corrupted += len(corrupted)
         if corrupted:
-            print(f"  {c:12s} : {len(corrupted)} image(s) corrompue(s) supprimée(s)")
+            print(f"  {c:12s} : {len(corrupted)} image(s) corrupted deleted")
             for p in corrupted:
                 print(f"    - {p}")
         else:
             print(f"  {c:12s} : OK ({len(valid)} images valides)")
-    print(f"Total corrompues : {total_corrupted}")
+    print(f"Total corrupted: {total_corrupted}")
 
-    # --- Détection des doublons ---
-    print("\n--- Détection des doublons ---")
+    # Duplicate detection + reporting
+    print("\n Duplicate detection")
     duplicates = find_duplicates(images_by_class)
     if duplicates:
         print(f"  {len(duplicates)} groupe(s) de doublons trouvé(s) :")
@@ -233,24 +221,22 @@ def main() -> None:
             print(f"  Doublon ({len(paths)} fichiers) :")
             for p in paths:
                 print(f"    - {p}")
-            # Garde le premier, supprime les autres du dict
+            # Keep only one image per group of duplicates, remove the others
             for p in paths[1:]:
                 dup_paths.add(p)
         for c in classes:
             images_by_class[c] = [p for p in images_by_class[c] if p not in dup_paths]
-        print(f"  {len(dup_paths)} doublon(s) retiré(s) du dataset.")
+        print(f"  {len(dup_paths)} duplicate(s) removed from the dataset.")
     else:
-        print("  Aucun doublon détecté.")
+        print("  No duplicates found.")
 
     for c, imgs in images_by_class.items():
-        print(f"  {c:12s} : {len(imgs):6d} images retenues pour le split")
+        print(f"  {c:12s} : {len(imgs):6d} image final after filtering")
 
-    # ------------------------------------------------------------------------
-    # 2. Équilibre des classes
-    # ------------------------------------------------------------------------
+    # 2. Class balance analysis
 
     print("\n" + "=" * 70)
-    print("2. Comptage et équilibre des classes")
+    print("2. Class balance analysis")
     print("=" * 70)
 
     counts = {
@@ -274,12 +260,12 @@ def main() -> None:
 
     imbalance = n_max / max(n_min, 1)
 
-    print(f"\nImbalance ratio (max/min) : {imbalance:.2f}")
+    print(f"\n Imbalance ratio (max/min) : {imbalance:.2f}")
 
     if imbalance > 2:
-        print("--> Dataset déséquilibré")
+        print("--> Imbalance dataset")
     else:
-        print("--> Dataset raisonnablement équilibré")
+        print("--> Dataset effectively balanced")
 
     fig, ax = plt.subplots(figsize=(8, 4))
 
@@ -289,8 +275,8 @@ def main() -> None:
         color="steelblue",
     )
 
-    ax.set_ylabel("Nombre d'images")
-    ax.set_title("Distribution des images par classe")
+    ax.set_ylabel("Image number")
+    ax.set_title("Distribution of images by class")
 
     for i, v in enumerate(df_counts["n_images"]):
         ax.text(i, v, str(v), ha="center", va="bottom")
@@ -302,14 +288,12 @@ def main() -> None:
     plt.savefig(fig_path, dpi=120)
     plt.close()
 
-    print(f"Figure sauvegardée : {fig_path}")
+    print(f"Figure saved: {fig_path}")
 
-    # ------------------------------------------------------------------------
-    # 3. Distribution tailles
-    # ------------------------------------------------------------------------
+    # 3. Image size distribution
 
     print("\n" + "=" * 70)
-    print("3. Distribution des tailles d'images")
+    print("3. Image size distribution")
     print("=" * 70)
 
     rows = []
@@ -356,7 +340,7 @@ def main() -> None:
 
     axes[0].set_xlabel("Width")
     axes[0].set_ylabel("Height")
-    axes[0].set_title("Dimensions des images")
+    axes[0].set_title("Dimensions of the images")
     axes[0].legend()
     axes[0].grid(True, alpha=0.3)
 
@@ -366,7 +350,7 @@ def main() -> None:
         ax=axes[1],
     )
 
-    axes[1].set_title("Largeur par classe")
+    axes[1].set_title("Width by class")
 
     plt.suptitle("")
     plt.tight_layout()
@@ -376,11 +360,9 @@ def main() -> None:
     plt.savefig(fig_path, dpi=120)
     plt.close()
 
-    print(f"Figure sauvegardée : {fig_path}")
+    print(f"Figure saved: {fig_path}")
 
-    # ------------------------------------------------------------------------
-    # 4. Exemples visuels
-    # ------------------------------------------------------------------------
+    # 4. Visual examples
 
     fig, axes = plt.subplots(
         len(classes),
@@ -419,18 +401,16 @@ def main() -> None:
     plt.savefig(fig_path, dpi=120)
     plt.close()
 
-    print(f"Figure sauvegardée : {fig_path}")
+    print(f"Figure saved: {fig_path}")
 
-    # ------------------------------------------------------------------------
     # 5. Split + resize
-    # ------------------------------------------------------------------------
 
     print("\n" + "=" * 70)
-    print("5. Split + resize des images")
+    print("5. Split + resize of images")
     print("=" * 70)
 
     if SPLIT_DIR.exists():
-        print(f"Suppression ancien dossier {SPLIT_DIR}")
+        print(f"Deleting old directory {SPLIT_DIR}")
         shutil.rmtree(SPLIT_DIR)
 
     total_processed = 0
@@ -483,12 +463,10 @@ def main() -> None:
     print("\n")
     print(df_split.to_string(index=False))
 
-    # ------------------------------------------------------------------------
-    # 6. Vérification disque
-    # ------------------------------------------------------------------------
+    # 6. Disk check
 
     print("\n" + "=" * 70)
-    print("6. Vérification disque")
+    print("6. Disk check")
     print("=" * 70)
 
     for subset in ["train", "val", "test"]:
@@ -503,26 +481,23 @@ def main() -> None:
 
             print(f"  {c:12s} : {n:6d}")
 
-    # ------------------------------------------------------------------------
-    # Fin
-    # ------------------------------------------------------------------------
+    # End
 
     elapsed = time.time() - t0
 
     print("\n" + "=" * 70)
-    print("Terminé")
+    print("Finish")
     print("=" * 70)
 
-    print(f"Images traitées : {total_processed}")
+    print(f"Images processed: {total_processed}")
 
-    print(f"\nTemps total : {elapsed:.1f} s")
+    print(f"\nTTotal time: {elapsed:.1f} s")
 
     print(f"\nDataset final : {SPLIT_DIR}")
-    print(f"Resize final  : {TARGET_SIZE}")
-    print(f"Figures        : {FIGURES_DIR}")
+    print(f"Resize final    : {TARGET_SIZE}")
+    print(f"Plots           : {FIGURES_DIR}")
 
     print("=" * 70)
-
 
 if __name__ == "__main__":
     main()

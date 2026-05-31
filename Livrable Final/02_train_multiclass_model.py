@@ -1,17 +1,16 @@
 """
 02 — CNN multi-class 5 classes (modèle 023).
 
-Entraîne le modèle défini dans multiclass_model.py à partir des hyperparamètres
-de config_multiclass.json. Pipeline et architecture : voir multiclass_model.py
-(aucune duplication ici).
+Train the model define in "multiclass_model.py" from the hyperparameters specified in the config file "config_multiclass.json". 
+The training pipeline is also defined in multiclass_model.py (no duplication here).
 
-Sortie :
+Usage:
+    python3 02_model_multiclass.py
+
+Return:
     - models/multiclass_023_best.keras
     - histories/multiclass_023_history.json
     - figures/02_multiclass_curves.png
-
-Usage :
-    python3 02_model_multiclass.py
 """
 from __future__ import annotations
 
@@ -19,7 +18,7 @@ import json
 import sys
 from pathlib import Path
 
-# Le module multiclass_model et son config vivent dans 02_multiclass_model/
+# The module multiclass_model and its config live in 02_multiclass_model/
 MODEL_DIR = Path(__file__).resolve().parent / "02_multiclass_model"
 sys.path.insert(0, str(MODEL_DIR))
 
@@ -66,7 +65,7 @@ def main() -> None:
     print("=" * 70)
 
     if not SPLIT_DIR.exists():
-        raise SystemExit(f"ERREUR : {SPLIT_DIR} introuvable. Lance d'abord 01_data_split_analysis.py.")
+        raise SystemExit(f"Error: {SPLIT_DIR} not found. Please run 01_data_split_analysis.py first.")
 
     print("\n1. Construction des pipelines tf.data...")
     train_ds = make_dataset("train", cfg, augment=True)
@@ -83,8 +82,8 @@ def main() -> None:
 
     with open(history_path, "w", encoding="utf-8") as f:
         json.dump({k: [float(x) for x in v] for k, v in history.items()}, f, indent=2)
-    print(f"\nHistory : {history_path}")
-    print(f"Modèle  : {model_path}")
+    print(f"\n History : {history_path}")
+    print(f"Model: {model_path}")
 
     fig_path = FIGURES_DIR / "02_multiclass_curves.png"
     plot_curves(history, fig_path)
@@ -96,7 +95,7 @@ def main() -> None:
     print(f"Test accuracy : {test_acc:.4f}")
 
     print("\n" + "=" * 70)
-    print(f"Terminé. Modèle : {model_path}")
+    print(f"Finish. Model: {model_path}")
     print("=" * 70)
 
 

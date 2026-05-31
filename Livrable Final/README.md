@@ -1,12 +1,30 @@
 # Livrable Final — Classification d'images TouNum
 
+## Introduction et rappel du contexte
+
+L'entreprise **TouNum** est spécialisée dans la numérisation de documents papier à grande échelle (textes, images, archives).
+Face à la demande croissante de ses clients possédant des volumes massifs de données historiques et industrielles, 
+TouNum souhaite étendre sa gamme de services en intégrant des technologies de Machine Learning et de Deep Learning. 
+
+À terme, l'objectif final est de concevoir un workflow automatisé capable de générer des légendes descriptives de manière automatique (*Image Captioning*). 
+Cependant, les flux de documents numérisés en masse à la chaîne intègrent des formats très hétérogènes 
+(schémas, textes scannés, dessins, peintures) alors que l'algorithme de captioning final requiert exclusivement des photographies.
+
+### Objectif du Livrable 1 : Classification & Tri
+Ce module constitue le **premier jalon critique (Livrable 1)** du projet global. 
+Il répond au besoin impératif d'isoler automatiquement les photographies des autres types de documents en amont de la chaîne de traitement. 
+
+Pour ce faire, nous exploitons un dataset d'images supervisé et catégorisé fourni par TouNum. 
+L'enjeu majeur de ce livrable consiste à maximiser la précision de détection des photos tout en gérant la frontière fine et complexe séparant une photographie, d'une peinture réaliste, d'un dessin, un croquis ou un texte.
+## Aspects techniques :
+
 Pipeline de classification d'images en 5 classes (Painting, Photo, Schematics, Sketch, Text) avec un second étage binaire pour raffiner la distinction Painting/Photo.
 
 ---
 
-## 1. Préparation
+### 1. Préparation
 
-### Dataset
+#### Dataset
 
 Placer le dataset à la racine du projet :
 
@@ -20,7 +38,7 @@ Livrable Final/
 │   └── Text/
 ```
 
-### Dépendances
+#### Dépendances
 
 ```bash
 pip install -r requirements.txt
@@ -30,7 +48,7 @@ pip install -r requirements.txt
 
 ---
 
-## 2. Structure du projet
+### 2. Structure du projet
 
 ```
 Livrable Final/
@@ -69,7 +87,7 @@ Livrable Final/
 
 ---
 
-## 3. Pipeline d'exécution
+### 3. Pipeline d'exécution
 
 ```bash
 # 1. Split du dataset + EDA + nettoyage (doublons, images corrompues)
@@ -97,7 +115,7 @@ Le script de train (02_, 03_) charge `config_X.json` du dossier modèle. L'utili
 
 ---
 
-## 4. Split & EDA
+### 4. Split & EDA
 
 `01_data_split_analysis.py` fait trois choses essentielles :
 
@@ -114,7 +132,7 @@ Les figures sont sauvegardées dans `figures/` (à régénérer en lançant `01_
 
 ---
 
-## 5. Modèle multiclass : pourquoi 5 classes et non 4 ?
+### 5. Modèle multiclass : pourquoi 5 classes et non 4 ?
 
 Une variante du modèle a été testée en regroupant Painting + Photo dans une classe "Other" (4 classes), pour déléguer la distinction Painting/Photo au binaire en aval. Bien que cette approche améliore l'accuracy globale (0.948–0.972 vs 0.850–0.950), **elle dégrade la précision sur Schematics** (recall 0.82–0.91 vs 0.91–0.95 en 5 classes).
 
@@ -122,7 +140,7 @@ Le coût d'erreur sur Schematics est trop élevé pour notre cas d'usage : si un
 
 **Architecture retenue** : 5 classes en amont, puis si la prédiction est Painting ou Photo, l'image passe par le binaire pour raffiner. Le 5-class apprend directement la frontière Schematics/Photo (confusion ~3-4% seulement), donc beaucoup moins de Schematics atteignent le binaire.
 
-### Matrices de confusion comparatives
+#### Matrices de confusion comparatives
 
 | Modèle | Matrice | Curves |
 |---|---|---|
@@ -132,18 +150,18 @@ Le coût d'erreur sur Schematics est trop élevé pour notre cas d'usage : si un
 
 ---
 
-## 6. Deux modèles multiclass retenus : performance vs efficacité
+### 6. Deux modèles multiclass retenus : performance vs efficacité
 
 Deux configurations sont conservées :
 
 - **T08 — Performance maximale** : meilleur compromis accuracy/loss/recall (test_acc ≈ 0.950)
 - **T12 — Modèle léger** : ~120K paramètres seulement, accuracy ≈ 0.933
 
-### Pourquoi un modèle léger ?
+#### Pourquoi un modèle léger ?
 
 L'inférence à grande échelle a un coût énergétique non négligeable. Un modèle 10× plus petit consomme proportionnellement moins d'électricité par prédiction. Pour un déploiement en production (mobile, edge, traitement de masse), privilégier un modèle compact réduit l'empreinte carbone tout en conservant 93%+ d'accuracy. C'est un arbitrage explicite : -2 points d'accuracy contre -90% de paramètres.
 
-### Comparatif tuning
+#### Comparatif tuning
 
 ![Benchmark des trials multiclass](figures/tune/multiclass_benchmark.png)
 
@@ -153,7 +171,7 @@ Sur ce dernier graphique, T12 illustre clairement le compromis : à gauche du nu
 
 ---
 
-## 7. Modèle binaire (Painting vs Photo)
+### 7. Modèle binaire (Painting vs Photo)
 
 Le binaire est un transfer learning 2 phases (EfficientNetB0, base gelée puis fine-tuning) qui raffine la distinction la plus difficile du problème.
 
@@ -165,7 +183,16 @@ Meilleur trial : T11 — test_acc 0.983, test_auc 0.997.
 
 ---
 
-## 8. Benchmark final
+### 8. Benchmark final
 
 `04_evaluation_benchmark.py` évalue la pipeline complète (multiclass → binaire si Painting/Photo) sur le jeu de test. Configuration dans `config_benchmark.json` (chemins des modèles à benchmarker).
 
+## Conclusion
+
+Ce premier module valide la faisabilité industrielle du tri automatique pour TouNum. 
+En combinant un réseau multi-classes robuste en amont et un expert binaire basé sur le transfert d'apprentissage d'EfficientNetB0 en aval, 
+nous parvenons à isoler efficacement les flux de photographies avec un taux d'erreur résiduel minimal.
+
+Perspectives (Jalons Suivants) :
+Une fois les photographies correctement isolées et filtrées par ce module, la pipeline global se poursuivra avec le Livrable 2 (Traitement d'images) 
+ou nous implémenterons un réseau de neurones de type Auto-encodeur Convolutif (CAE) pour débruiter, corriger le flou et uniformiser la qualité des photographies retenues.
