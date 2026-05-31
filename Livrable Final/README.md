@@ -187,12 +187,30 @@ Meilleur trial : T11 — test_acc 0.983, test_auc 0.997.
 
 `04_evaluation_benchmark.py` évalue la pipeline complète (multiclass → binaire si Painting/Photo) sur le jeu de test. Configuration dans `config_benchmark.json` (chemins des modèles à benchmarker).
 
-## Conclusion
+## Conclusion Générale et Bilan
+Le travail d'ingénierie et de recherche mené dans ce premier livrable valide la viabilité du tri automatisé pour la chaîne de production de TouNum. Face au défi technique posé par la variété structurelle des données, la conception d'un système d'architecture en cascade a prouvé sa supériorité face aux approches naïves.
 
-Ce premier module valide la faisabilité industrielle du tri automatique pour TouNum. 
-En combinant un réseau multi-classes robuste en amont et un expert binaire basé sur le transfert d'apprentissage d'EfficientNetB0 en aval, 
-nous parvenons à isoler efficacement les flux de photographies avec un taux d'erreur résiduel minimal.
+#### Synthèse des Choix Structurants et Performances
+Garantie de l'intégrité des données : L'implémentation de filtres rigoureux en amont (nettoyage MD5 anti-fuite et Image.verify()) assure que l'apprentissage repose exclusivement sur des signaux mathématiques fiables, supprimant le biais de surapprentissage lié aux doublons.
 
-Perspectives (Jalons Suivants) :
-Une fois les photographies correctement isolées et filtrées par ce module, la pipeline global se poursuivra avec le Livrable 2 (Traitement d'images) 
-ou nous implémenterons un réseau de neurones de type Auto-encodeur Convolutif (CAE) pour débruiter, corriger le flou et uniformiser la qualité des photographies retenues.
+- Stratégie métier orientée 5 classes : Le choix d'exécuter un classifieur 5 classes en premier niveau protège la catégorie sensible Schematics (maintien d'un rappel élevé entre 0.91 et 0.95). Cela empêche les fuites de documents techniques vers le second étage, un écueil fonctionnel majeur observé lors de l'expérimentation du modèle à 4 classes.
+
+- Arbitrage Industriel (Modèles T08 vs T12) : L'entreprise dispose désormais d'une flexibilité technique totale :
+
+    - La configuration T08 offre une précision de pointe (test_acc ≈ 0.950) pour maximiser la qualité globale du tri.
+
+    - La configuration T12 répond à des contraintes de sobriété numérique et d'efficacité de calcul en production de masse, 
+réduisant le volume des paramètres de 90% pour une concession d'exactitude minime de seulement 1.7%.
+
+- Résolution de la frontière Critique (Photo / Painting) : 
+L'intégration d'un réseau expert binaire basé sur un modèle pré-entraîné EfficientNetB0 résout la confusion la plus complexe du dataset. 
+Les performances obtenues sur le jeu de test (Exactitude de 98.3% et AUC de 0.997) sécurisent l'isolation quasi parfaite des photographies attendues par TouNum.
+
+Perspectives et Alignement avec le Jalon Suivant (Livrable 2)
+L'implémentation robuste de ce premier bloc de classification permet de figer l'étape d'aiguillage des données. 
+Le flux opérationnel validé de TouNum s'oriente désormais vers le Livrable 2 : Traitement et Débruitage d'images.
+
+Les photographies ayant été correctement isolées et filtrées par notre pipeline binaire, 
+elles présentent néanmoins des défauts inhérents à une numérisation industrielle à la chaîne (bruit numérique, grain de compression, léger flou de balayage). 
+La prochaine phase consistera donc à développer un réseau de neurones de type Auto-encodeur Convolutif (CAE). 
+Ce modèle agira comme un filtre de débruitage intelligent (Denoising Autoencoder) pour restaurer et uniformiser la qualité visuelle des clichés.

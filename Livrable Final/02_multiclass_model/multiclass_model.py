@@ -1,22 +1,23 @@
 """
-multiclass_model.py — Module partagé pour le CNN multi-class 5 classes (modèle 023).
+multiclass_model.py — Shared module for the 5-class multi-class CNN (model 023).
 
-Pipeline tf.data custom et architecture EXTRAITS À L'IDENTIQUE de tune_023.py
-(seul Optuna est retiré : c'est ici le code "métier" pur, réutilisable).
+Custom tf.data pipeline and architecture EXTRACTED IDENTICALLY from tune_023.py
+(only Optuna is removed: this is the pure "business" code, ready for reuse).
 
-Ce module ne contient AUCUN main : il est importé par
-  - 02_model_multiclass.py   (entraînement depuis config_multiclass.json)
-  - tune_multiclass.py       (recherche d'hyperparamètres Optuna)
+This module contains NO main block: it is imported by
+  - 02_model_multiclass.py   (training from config_multiclass.json)
+  - tune_multiclass.py       (Optuna hyperparameter search)
 
-Tout est piloté par un dict `cfg` (voir config_multiclass.json pour le schéma).
+Everything is driven by a `cfg` dict (see config_multiclass.json for the schema).
 """
 from __future__ import annotations
 
 import sys
 import time
 from pathlib import Path
+import numpy as np
 
-# Permet d'importer utils depuis la racine du Livrable
+# Allows importing utils from the root of the Deliverable
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import tensorflow as tf
@@ -29,10 +30,7 @@ IMG_H, IMG_W = IMG_SIZE
 AUTOTUNE = tf.data.AUTOTUNE
 N_CLASSES = len(CLASS_NAMES)
 
-
-# ----------------------------------------------------------------------------
-# Pipeline tf.data  (identique à tune_023.py)
-# ----------------------------------------------------------------------------
+# tf.data Pipeline  (identical to tune_023.py)
 
 def _decode_img(file_path: tf.Tensor) -> tf.Tensor:
     raw = tf.io.read_file(file_path)
@@ -73,10 +71,7 @@ def make_dataset(subset: str, cfg: dict, augment: bool = False) -> tf.data.Datas
         ds = ds.shuffle(cfg["shuffle_buffer"], seed=cfg["seed"], reshuffle_each_iteration=True)
     return ds.batch(cfg["batch_size"]).prefetch(AUTOTUNE)
 
-
-# ----------------------------------------------------------------------------
-# Modèle  (identique à tune_023.py)
-# ----------------------------------------------------------------------------
+# Model  (identical to tune_023.py)
 
 def build_model(cfg: dict) -> models.Model:
     dp = cfg["dropout"]
@@ -102,10 +97,7 @@ def build_model(cfg: dict) -> models.Model:
     out = layers.Dense(N_CLASSES, activation="softmax", name="predictions")(x)
     return models.Model(inp, out, name="cnn_trial")
 
-
-# ----------------------------------------------------------------------------
-# Entraînement  (callbacks identiques à l'objective de tune_023.py)
-# ----------------------------------------------------------------------------
+# Training  (callbacks identical to the objective from tune_023.py)
 
 def run_training(
     cfg: dict,
@@ -115,16 +107,15 @@ def run_training(
     extra_callbacks: list | None = None,
     verbose: int = 1,
 ) -> tuple[models.Model, dict]:
-    """Compile + entraîne le modèle et renvoie (model, history_dict).
-
-    `extra_callbacks` est ajouté à la liste (utilisé par le tuner : SpeedGuard…).
-    `model_path` : si fourni, ModelCheckpoint sauvegarde le meilleur modèle.
-    Reproduit exactement la configuration d'entraînement de tune_023.py.
+    """Compiles + trains the model and returns (model, history_dict).
+    `extra_callbacks` is appended to the list (used by the tuner: SpeedGuard…).
+    `model_path`: if provided, ModelCheckpoint saves the best model.
+    Reproduces exactly the training configuration of tune_023.py.
     """
     model = build_model(cfg)
     if verbose:
         model.summary(print_fn=print)
-        print(f"\nParams : {model.count_params():,}")
+        print(f"\nParams: {model.count_params():,}")
 
     model.compile(
         optimizer=tf.keras.optimizers.Adam(learning_rate=cfg["learning_rate"]),
@@ -148,8 +139,6 @@ def run_training(
 
     t0 = time.time()
 
-    import numpy as np
-
     n_classes = cfg.get("n_classes", len(cfg["class_names"]))
     class_counts = np.zeros(n_classes, dtype=np.int64)
     for _, labels in train_ds.unbatch():
@@ -160,7 +149,7 @@ def run_training(
         i: total / (n_classes * count)
         for i, count in enumerate(class_counts)
     }
-    print(f"Class weights : {class_weight}")
+    print(f"Class weights: {class_weight}")
 
     hist = model.fit(
         train_ds,
@@ -171,6 +160,6 @@ def run_training(
         verbose=verbose
         )
     if verbose:
-        print(f"\nEntraînement : {(time.time()-t0)/60:.1f} min — {len(hist.history['loss'])} epochs")
+        print(f"\nTraining: {(time.time()-t0)/60:.1f} min — {len(hist.history['loss'])} epochs")
 
     return model, hist.history

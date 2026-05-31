@@ -1,24 +1,24 @@
 """
-tune_multiclass.py — Optimisation bayésienne (Optuna) du modèle multi-class 023.
+tune_multiclass.py — Bayesian optimization (Optuna) for the multi-class 023 model.
 
-Wrapper mince autour de multiclass_model.py : chaque trial génère un `cfg`, puis
-réutilise EXACTEMENT le même build_model / make_dataset / run_training que le
-script d'entraînement 02_model_multiclass.py (zéro duplication d'architecture).
+Thin wrapper around multiclass_model.py: each trial generates a `cfg`, then
+reuses EXACTLY the same build_model / make_dataset / run_training as the
+training script 02_model_multiclass.py (zero architecture duplication).
 
-Objectif : minimiser le nombre de paramètres tout en garantissant
+Objective: minimize the number of parameters while ensuring
   - val_accuracy >= 0.90
   - val_loss     <= 0.25
   - gap train/val <= 0.07
+  
+Replaces tune_023.py (same output, same format, supports resuming).
 
-Sortie (compatible avec analyze_tune_results.py) :
-  - tune_multiclass_results/results.json      — toutes les métriques
-  - tune_multiclass_results/best_config.json  — meilleure config
-  - tune_multiclass_results/comparison_*.png  — graphiques comparatifs
-
-Remplace tune_023.py (même sortie, même format, reprise possible).
-
-Usage :
+Usage:
     python3 tune_multiclass.py --trials 30
+
+Output (compatible with analyze_tune_results.py):
+  - tune_multiclass_results/results.json      — all metrics
+  - tune_multiclass_results/best_config.json  — best config
+  - tune_multiclass_results/comparison_*.png  — comparative plots
 """
 from __future__ import annotations
 
@@ -28,7 +28,7 @@ import sys
 import time
 from pathlib import Path
 
-# Permet d'importer utils depuis la racine du Livrable
+# Allows importing utils from the root of the Livrable folder
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import matplotlib
@@ -56,10 +56,7 @@ SPEED_CHECK_STEPS = 4
 
 _PENALTY = 1e9
 
-
-# ----------------------------------------------------------------------------
-# SpeedGuard : ignore les trials trop lents (spécifique au tuning)
-# ----------------------------------------------------------------------------
+# SpeedGuard: skips trials that are too slow (tuning specific)
 
 class SpeedGuard(callbacks.Callback):
     def on_train_begin(self, logs=None):
@@ -77,14 +74,11 @@ class SpeedGuard(callbacks.Callback):
         if len(self._step_times) == SPEED_CHECK_STEPS:
             avg = sum(self._step_times) / SPEED_CHECK_STEPS
             if avg > MAX_STEP_TIME_S:
-                print(f"\n  ⚡ SpeedGuard : moyenne step = {avg:.2f}s > {MAX_STEP_TIME_S}s — trial ignoré.")
+                print(f"\n  ⚡ SpeedGuard: average step = {avg:.2f}s > {MAX_STEP_TIME_S}s — trial skipped.")
                 self.model.stop_training = True
                 self.triggered = True
 
-
-# ----------------------------------------------------------------------------
-# Config d'un trial  (identique à tune_023.py)
-# ----------------------------------------------------------------------------
+# Trial configuration (identical to tune_023.py)
 
 def make_config_from_trial(trial: optuna.Trial) -> dict:
     n_blocs = trial.suggest_int("n_blocs", 2, 4)
@@ -121,10 +115,7 @@ def make_config_from_trial(trial: optuna.Trial) -> dict:
         "class_names": CLASS_NAMES,
     }
 
-
-# ----------------------------------------------------------------------------
-# Objectif Optuna
-# ----------------------------------------------------------------------------
+# Optuna Objective
 
 def objective(trial: optuna.Trial, all_results: list[dict]) -> float:
     cfg = make_config_from_trial(trial)
@@ -139,9 +130,6 @@ def objective(trial: optuna.Trial, all_results: list[dict]) -> float:
 
     train_ds = make_dataset("train", cfg, augment=True)
     val_ds   = make_dataset("val",   cfg, augment=False)
-    # NB : pas de test_ds ici. Le jeu de test ne doit JAMAIS être vu pendant le
-    # tuning (sélection d'hyperparamètres) — il est réservé au benchmark final
-    # dans analyze_multiclass_tune_results.py.
 
     speed_guard = SpeedGuard()
     model_path = RESULTS_DIR / f"model_trial_{trial_id + 1:02d}.keras"
@@ -159,7 +147,7 @@ def objective(trial: optuna.Trial, all_results: list[dict]) -> float:
 
     if speed_guard.triggered:
         tf.keras.backend.clear_session()
-        print(f"  → Trial {trial_id+1} ignoré (trop lent).")
+        print(f"  → Trial {trial_id+1} skipped (too slow).")
         return _PENALTY
 
     val_accs   = history["val_accuracy"]
@@ -198,9 +186,9 @@ def objective(trial: optuna.Trial, all_results: list[dict]) -> float:
     }
     all_results.append(metrics)
 
-    status = "✓ CIBLE ATTEINTE" if meets_target else "✗"
+    status = "✓ TARGET MET" if meets_target else "✗"
     overfit_str = " ⚠ OVERFIT" if metrics["overfitting"] else ""
-    print(f"\nTrial {trial_id+1} : val_acc={metrics['best_val_acc']}  "
+    print(f"\nTrial {trial_id+1}: val_acc={metrics['best_val_acc']}  "
           f"val_loss={metrics['best_val_loss']}  gap={metrics['overfit_gap']}  "
           f"params={n_params:,}  {status}{overfit_str}")
 
@@ -218,10 +206,7 @@ def objective(trial: optuna.Trial, all_results: list[dict]) -> float:
         penalty += (overfit_gap - MAX_OVERFIT_GAP) * 1e6
     return penalty
 
-
-# ----------------------------------------------------------------------------
-# Visualisations  (identiques à tune_023.py)
-# ----------------------------------------------------------------------------
+# Visualizations (identical to tune_023.py)
 
 def make_comparison_plots(results: list[dict]) -> None:
     df = pd.DataFrame([{
@@ -241,36 +226,36 @@ def make_comparison_plots(results: list[dict]) -> None:
     x = np.arange(n)
 
     fig, axes = plt.subplots(2, 3, figsize=(18, 10))
-    fig.suptitle("Comparaison des trials — tune_multiclass (Optuna)", fontsize=14, fontweight="bold")
+    fig.suptitle("Trial Comparison — tune_multiclass (Optuna)", fontsize=14, fontweight="bold")
 
     ax = axes[0, 0]
     ax.bar(x, df["val_acc"], color=colors, alpha=0.8)
-    ax.axhline(TARGET_VAL_ACC, color="green", linestyle="--", linewidth=1.5, label=f"Cible {TARGET_VAL_ACC}")
+    ax.axhline(TARGET_VAL_ACC, color="green", linestyle="--", linewidth=1.5, label=f"Target {TARGET_VAL_ACC}")
     ax.set_xticks(x); ax.set_xticklabels(df["trial"], rotation=45, ha="right")
     ax.set_title("Val Accuracy"); ax.set_ylabel("Accuracy"); ax.legend(); ax.grid(True, alpha=0.3)
 
     ax = axes[0, 1]
     ax.bar(x, df["val_loss"], color=colors, alpha=0.8)
-    ax.axhline(TARGET_VAL_LOSS, color="orange", linestyle="--", linewidth=1.5, label=f"Cible {TARGET_VAL_LOSS}")
+    ax.axhline(TARGET_VAL_LOSS, color="orange", linestyle="--", linewidth=1.5, label=f"Target {TARGET_VAL_LOSS}")
     ax.set_xticks(x); ax.set_xticklabels(df["trial"], rotation=45, ha="right")
     ax.set_title("Val Loss"); ax.set_ylabel("Loss"); ax.legend(); ax.grid(True, alpha=0.3)
 
     ax = axes[0, 2]
     gap_colors = ["red" if o else "steelblue" for o in df["overfitting"]]
     ax.bar(x, df["overfit_gap"], color=gap_colors, alpha=0.8)
-    ax.axhline(MAX_OVERFIT_GAP, color="red", linestyle="--", linewidth=1.5, label=f"Seuil {MAX_OVERFIT_GAP}")
+    ax.axhline(MAX_OVERFIT_GAP, color="red", linestyle="--", linewidth=1.5, label=f"Threshold {MAX_OVERFIT_GAP}")
     ax.set_xticks(x); ax.set_xticklabels(df["trial"], rotation=45, ha="right")
-    ax.set_title("Gap Train/Val (overfitting)"); ax.set_ylabel("Gap"); ax.legend(); ax.grid(True, alpha=0.3)
+    ax.set_title("Train/Val Gap (overfitting)"); ax.set_ylabel("Gap"); ax.legend(); ax.grid(True, alpha=0.3)
 
     ax = axes[1, 0]
     ax.bar(x, df["stability"], color=colors, alpha=0.8)
     ax.set_xticks(x); ax.set_xticklabels(df["trial"], rotation=45, ha="right")
-    ax.set_title("Stabilité (std val_loss, 5 dern.)"); ax.set_ylabel("std"); ax.grid(True, alpha=0.3)
+    ax.set_title("Stability (val_loss std, last 5 epochs)"); ax.set_ylabel("std"); ax.grid(True, alpha=0.3)
 
     ax = axes[1, 1]
     ax.bar(x, df["n_params"], color="steelblue", alpha=0.8)
     ax.set_xticks(x); ax.set_xticklabels(df["trial"], rotation=45, ha="right")
-    ax.set_title("Nombre de paramètres (M)"); ax.set_ylabel("Params (M)"); ax.grid(True, alpha=0.3)
+    ax.set_title("Number of parameters (M)"); ax.set_ylabel("Params (M)"); ax.grid(True, alpha=0.3)
 
     ax = axes[1, 2]
     sc = ax.scatter(df["n_params"], df["val_acc"], c=df["overfit_gap"],
@@ -307,12 +292,12 @@ def make_comparison_plots(results: list[dict]) -> None:
     plt.tight_layout()
     plt.savefig(RESULTS_DIR / "comparison_curves.png", dpi=100)
     plt.close()
-    print(f"\nGraphiques : {RESULTS_DIR}/comparison_*.png")
+    print(f"\nPlots saved in: {RESULTS_DIR}/comparison_*.png")
 
 
 def print_summary_table(results: list[dict], best_idx: int) -> None:
     print("\n" + "=" * 95)
-    print("RÉSUMÉ DES TRIALS")
+    print("TRIALS SUMMARY")
     print("=" * 95)
     rows = []
     for r in results:
@@ -323,25 +308,22 @@ def print_summary_table(results: list[dict], best_idx: int) -> None:
             "gap":       r["overfit_gap"],
             "params(k)": r["n_params"] // 1000,
             "time(min)": r["train_time"],
-            "cible":     "✓" if r["meets_target"] else "✗",
+            "target":     "✓" if r["meets_target"] else "✗",
             "overfit":   "⚠" if r["overfitting"] else "ok",
         })
     df = pd.DataFrame(rows)
     print(df.to_string(index=False, float_format="%.4f"))
     best = results[best_idx]
-    print(f"\n→ Meilleur trial : T{best['trial_id']+1} "
+    print(f"\n→ Best trial: T{best['trial_id']+1} "
           f"(val_acc={best['best_val_acc']}, val_loss={best['best_val_loss']}, "
           f"params={best['n_params']:,})")
-    print(f"  Config sauvegardée dans : {RESULTS_DIR}/best_config.json")
+    print(f"  Configuration saved in: {RESULTS_DIR}/best_config.json")
 
-
-# ----------------------------------------------------------------------------
-# Main  (resume + TPE + importance, identiques à tune_023.py)
-# ----------------------------------------------------------------------------
+# Main (resume + TPE + importance, identical to tune_023.py)
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--trials", type=int, default=6, help="Nombre de trials")
+    parser.add_argument("--trials", type=int, default=6, help="Number of trials")
     args = parser.parse_args()
 
     RESULTS_DIR.mkdir(exist_ok=True)
@@ -351,7 +333,7 @@ def main():
     if results_path.exists():
         with open(results_path) as f:
             all_results = json.load(f)
-        print(f"Reprise : {len(all_results)} trials déjà effectués")
+        print(f"Resuming study: {len(all_results)} trials already completed")
 
     study = optuna.create_study(
         direction="minimize",
@@ -359,7 +341,7 @@ def main():
         study_name="tune_multiclass",
     )
 
-    # Réinjecte les trials connus pour que Optuna en tienne compte
+    # Re-injects known trials so Optuna takes them into account
     for r in all_results:
         cfg = r["config"]
         params = {
@@ -410,7 +392,7 @@ def main():
         json.dump(all_results, f, indent=2)
 
     if not all_results:
-        print("Aucun trial valide.")
+        print("No valid trial found.")
         return
 
     def score(r):
@@ -428,13 +410,13 @@ def main():
     try:
         importances = optuna.importance.get_param_importances(study)
         print("\n" + "=" * 50)
-        print("IMPORTANCE DES HYPERPARAMÈTRES")
+        print("HYPERPARAMETER IMPORTANCE")
         print("=" * 50)
         for param, importance in importances.items():
             bar = "█" * int(importance * 40)
             print(f"  {param:<30} {importance:.3f}  {bar}")
     except Exception as e:
-        print(f"\n(Importance non calculable : {e})")
+        print(f"\n(Importance could not be calculated: {e})")
 
 
 if __name__ == "__main__":
