@@ -1,4 +1,4 @@
-# Livrable Final — Classification d'images TouNum
+# Livrable Final : Classification d'images TouNum
 
 ## Introduction et rappel du contexte
 
@@ -119,8 +119,8 @@ Le script de train (02_, 03_) charge `config_X.json` du dossier modèle. L'utili
 
 `01_data_split_analysis.py` fait trois choses essentielles :
 
-1. **Détection et exclusion des images corrompues** *avant* le split, via `Image.verify()` — les images cassées ne sont jamais comptées dans le ratio 70/15/15.
-2. **Détection des doublons (MD5)** intra et inter-classes — évite le data leakage entre train/val/test.
+1. **Détection et exclusion des images corrompues** *avant* le split, via `Image.verify()` : les images cassées ne sont jamais comptées dans le ratio 70/15/15.
+2. **Détection des doublons (MD5)** intra et inter-classes : évite le data leakage entre train/val/test.
 3. **Split 70/15/15** stratifié par classe avec seed fixe, puis resize 224×224 en JPEG qualité 95.
 
 L'EDA inclut :
@@ -144,9 +144,9 @@ Le coût d'erreur sur Schematics est trop élevé pour notre cas d'usage : si un
 
 | Modèle | Matrice | Curves |
 |---|---|---|
-| 5 classes (T08 — meilleur) | ![](figures/multiclass/cm_T08_norm.png) | ![](figures/multiclass/curves_T08.png) |
-| 5 classes (T12 — alternatif) | ![](figures/multiclass/cm_T12_norm.png) | ![](figures/multiclass/curves_T12.png) |
-| 4 classes (T01 — meilleur écarté) | ![](figures/multiclass/cm_4classes_T01_norm.png) | ![](figures/multiclass/curves_4classes_T01.png) |
+| 5 classes (T08 : meilleur) | ![](figures/multiclass/cm_T08_norm.png) | ![](figures/multiclass/curves_T08.png) |
+| 5 classes (T12 : alternatif) | ![](figures/multiclass/cm_T12_norm.png) | ![](figures/multiclass/curves_T12.png) |
+| 4 classes (T01 : meilleur écarté) | ![](figures/multiclass/cm_4classes_T01_norm.png) | ![](figures/multiclass/curves_4classes_T01.png) |
 
 ---
 
@@ -154,8 +154,8 @@ Le coût d'erreur sur Schematics est trop élevé pour notre cas d'usage : si un
 
 Deux configurations sont conservées :
 
-- **T08 — Performance maximale** : meilleur compromis accuracy/loss/recall (test_acc ≈ 0.950)
-- **T12 — Modèle léger** : ~120K paramètres seulement, accuracy ≈ 0.933
+- **T08 : Performance maximale** : meilleur compromis accuracy/loss/recall (test_acc ≈ 0.950)
+- **T12 : Modèle léger** : ~120K paramètres seulement, accuracy ≈ 0.933
 
 #### Pourquoi un modèle léger ?
 
@@ -177,7 +177,7 @@ Le binaire est un transfer learning 2 phases (EfficientNetB0, base gelée puis f
 
 **Observation clé du tuning** : MobileNetV2 s'effondre systématiquement sur ce problème (val_acc ~0.50, prédit une seule classe). Seul EfficientNetB0 converge. Le tuning final ne devrait explorer que ce backbone.
 
-Meilleur trial : T11 — test_acc 0.983, test_auc 0.997.
+Meilleur trial : T11 : test_acc 0.983, test_auc 0.997.
 
 ![Matrice de confusion T11](figures/binary/cm_T11_norm.png)
 
@@ -185,7 +185,7 @@ Meilleur trial : T11 — test_acc 0.983, test_auc 0.997.
 
 ### 8. Benchmark final
 
-`04_evaluation_benchmark.py` évalue la pipeline complète (multiclass → binaire si Painting/Photo) sur le jeu de test. Configuration dans `config_benchmark.json` (chemins des modèles à benchmarker).
+`04_evaluation_benchmark.py` évalue la pipeline complète (multiclass -> binaire si Painting/Photo) sur le jeu de test. Configuration dans `config_benchmark.json` (chemins des modèles à benchmarker).
 
 ## Conclusion Générale et Bilan
 Le travail d'ingénierie et de recherche mené dans ce premier livrable valide la viabilité du tri automatisé pour la chaîne de production de TouNum. Face au défi technique posé par la variété structurelle des données, la conception d'un système d'architecture en cascade a prouvé sa supériorité face aux approches naïves.

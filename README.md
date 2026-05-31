@@ -41,7 +41,7 @@ Dataset/Dataset/
 
 ---
 
-## 2. Préparation des données — `01_data_split_analysis.py`
+## 2. Préparation des données : `01_data_split_analysis.py`
 
 Ce script :
 - répartit les images en **train (70 %) / val (15 %) / test (15 %)** de façon
@@ -101,7 +101,7 @@ Le meilleur modèle obtenu fait **~40 000 paramètres** pour ~92 % de test accur
 ### Mécanismes d'entraînement
 - **EarlyStopping** (`monitor=val_loss`, `restore_best_weights=True`) : arrête
   l'entraînement quand la val_loss ne s'améliore plus et restaure les meilleurs poids.
-- **ReduceLROnPlateau** : **ajustement du learning rate en temps réel** — le LR est
+- **ReduceLROnPlateau** : **ajustement du learning rate en temps réel** : le LR est
   divisé (facteur 0.5) quand la val_loss stagne, pour affiner la convergence.
 - **ModelCheckpoint** : sauvegarde le meilleur modèle (plus basse val_loss).
 
@@ -139,7 +139,7 @@ Photo/Painting, sinon la cascade n'apporte rien.
 
 ### Mécanismes d'entraînement
 Mêmes mécanismes que le multi-class : **EarlyStopping**, **ReduceLROnPlateau**
-(ajustement du LR en temps réel), **ModelCheckpoint** — appliqués sur la phase de
+(ajustement du LR en temps réel), **ModelCheckpoint** : appliqués sur la phase de
 fine-tuning.
 
 ### Lancer
@@ -183,12 +183,12 @@ Produit (dans `<dossier>/analysis/`) :
 
 ---
 
-## 7. Benchmark final — `04_evaluation_benchmark.py`
+## 7. Benchmark final : `04_evaluation_benchmark.py`
 
 Compare **multi-class seul** vs **pipeline cascadé** (multi-class + binaire) sur le
 test set : matrices de confusion, classification reports, et accuracy/precision/recall/F1.
 
-Le script est **piloté par `config_benchmark.json`** — pour benchmarker d'autres
+Le script est **piloté par `config_benchmark.json`** : pour benchmarker d'autres
 modèles, il suffit d'y changer les chemins (aucune modification de code) :
 
 ```json
@@ -229,7 +229,7 @@ python3 04_evaluation_benchmark.py           # 5. benchmark cascade final
 
 ---
 
-## 9. Astuce — libérer la VRAM
+## 9. Astuce : libérer la VRAM
 
 Keras/TF ne libère pas toujours la mémoire GPU. Pour la récupérer :
 ```bash
